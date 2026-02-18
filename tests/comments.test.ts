@@ -1,7 +1,7 @@
 import { convexTest } from "convex-test";
 import { expect, test } from "vitest";
-import { api } from "./_generated/api";
-import schema from "./schema";
+import { api } from "../convex/_generated/api";
+import schema from "../convex/schema";
 
 test("getComments returns empty array for unknown listing", async () => {
   const t = convexTest(schema);
@@ -66,7 +66,6 @@ test("postComment rejects text over 1000 chars", async () => {
   ).rejects.toThrow();
 });
 
-// Note: this test depends on votes.ts which will be created in the next task.
 test("getComments sorts by score descending", async () => {
   const t = convexTest(schema);
 
