@@ -13,20 +13,6 @@ const SheetPortal = ({ container, ...props }: DialogPrimitive.DialogPortalProps)
 )
 SheetPortal.displayName = "SheetPortal"
 
-const SheetOverlay = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    className={cn(
-      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
-    )}
-    {...props}
-    ref={ref}
-  />
-))
-SheetOverlay.displayName = "SheetOverlay"
 
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
@@ -35,7 +21,6 @@ const SheetContent = React.forwardRef<
   const container = useShadowPortal()
   return (
     <SheetPortal container={container}>
-      <SheetOverlay />
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
