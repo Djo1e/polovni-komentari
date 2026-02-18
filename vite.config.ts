@@ -1,3 +1,4 @@
+import path from "path"
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { crx } from '@crxjs/vite-plugin'
@@ -10,6 +11,11 @@ export default defineConfig({
     tailwindcss(),
     crx({ manifest }),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   test: {
     environment: 'edge-runtime',
     server: { deps: { inline: ['convex-test'] } },
