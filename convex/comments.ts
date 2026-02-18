@@ -30,12 +30,13 @@ export const getComments = query({
 export const postComment = mutation({
   args: { listingId: v.string(), text: v.string(), authorId: v.string() },
   handler: async (ctx, { listingId, text, authorId }) => {
-    if (text.trim().length === 0) throw new Error("Comment cannot be empty");
-    if (text.length > 1000) throw new Error("Comment too long");
+    const trimmed = text.trim();
+    if (trimmed.length === 0) throw new Error("Comment cannot be empty");
+    if (trimmed.length > 1000) throw new Error("Comment too long");
     return ctx.db.insert("comments", {
       listingId,
       authorId,
-      text: text.trim(),
+      text: trimmed,
       createdAt: Date.now(),
     });
   },
