@@ -1,19 +1,19 @@
 import { expect, test } from "vitest";
 import { extractListingId } from "./listingId";
 
-test("extracts ID from standard listing URL", () => {
+test("extracts ID from real listing URL", () => {
   expect(
-    extractListingId("https://www.polovniautomobili.com/auto-oglasi/oglas/kia-sportage-1-6-crdi-24536789.html")
-  ).toBe("24536789");
+    extractListingId("https://www.polovniautomobili.com/auto-oglasi/28478932/audi-a6-40-tdi-3xs-line?attp=p19_pv0_pc1_pl10_plv0")
+  ).toBe("28478932");
 });
 
-test("extracts ID when car name has many hyphens", () => {
+test("extracts ID with no query string", () => {
   expect(
-    extractListingId("https://www.polovniautomobili.com/auto-oglasi/oglas/mercedes-benz-c-220-d-amg-line-99887766.html")
-  ).toBe("99887766");
+    extractListingId("https://www.polovniautomobili.com/auto-oglasi/12345678/volkswagen-golf-7")
+  ).toBe("12345678");
 });
 
-test("returns null for non-listing URL", () => {
+test("returns null for listing index page (no numeric id segment)", () => {
   expect(
     extractListingId("https://www.polovniautomobili.com/auto-oglasi/")
   ).toBeNull();

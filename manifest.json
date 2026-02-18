@@ -6,7 +6,7 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "matches": ["https://www.polovniautomobili.com/auto-oglasi/oglas/*"],
+      "matches": ["https://www.polovniautomobili.com/auto-oglasi/*/*"],
       "js": ["src/content/index.tsx"]
     }
   ]
