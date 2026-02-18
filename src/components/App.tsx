@@ -4,15 +4,17 @@ import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 import { Drawer } from "./Drawer";
 import { Comment } from "./CommentItem";
+import { ShadowPortalContext } from "../context/shadow-portal";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
 interface AppProps {
   listingId: string;
   anonymousId: string;
+  portalContainer: HTMLElement;
 }
 
-function CommentApp({ listingId, anonymousId }: AppProps) {
+function CommentApp({ listingId, anonymousId }: Omit<AppProps, "portalContainer">) {
   const commentsRaw = useQuery(api.comments.getComments, { listingId });
   const voteMutation = useMutation(api.votes.vote);
   const postMutation = useMutation(api.comments.postComment);
@@ -67,10 +69,12 @@ function CommentApp({ listingId, anonymousId }: AppProps) {
   );
 }
 
-export default function App(props: AppProps) {
+export default function App({ portalContainer, ...props }: AppProps) {
   return (
-    <ConvexProvider client={convex}>
-      <CommentApp {...props} />
-    </ConvexProvider>
+    <ShadowPortalContext.Provider value={portalContainer}>
+      <ConvexProvider client={convex}>
+        <CommentApp {...props} />
+      </ConvexProvider>
+    </ShadowPortalContext.Provider>
   );
 }

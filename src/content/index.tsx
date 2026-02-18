@@ -21,12 +21,15 @@ async function main() {
   style.textContent = styles;
   shadow.appendChild(style);
 
+  const portalTarget = document.createElement("div");
+  shadow.appendChild(portalTarget);
+
   const container = document.createElement("div");
   shadow.appendChild(container);
 
   createRoot(container).render(
     <React.StrictMode>
-      <App listingId={listingId} anonymousId={anonymousId} />
+      <App listingId={listingId} anonymousId={anonymousId} portalContainer={portalTarget} />
     </React.StrictMode>
   );
 }
