@@ -67,7 +67,7 @@ test("postComment rejects text over 1000 chars", async () => {
 });
 
 // Note: this test depends on votes.ts which will be created in the next task.
-test.skip("getComments sorts by score descending", async () => {
+test("getComments sorts by score descending", async () => {
   const t = convexTest(schema);
 
   const id1 = await t.mutation(api.comments.postComment, {
