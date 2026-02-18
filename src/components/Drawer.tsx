@@ -69,7 +69,7 @@ export function Drawer({
           chrome.storage.local.set({ [DRAWER_STATE_KEY]: v });
         }}
       >
-        <SheetContent className="w-[380px] top-0 h-[100dvh] p-0 flex flex-col">
+        <SheetContent className="w-[380px] top-[80px] p-0 flex flex-col">
           <SheetHeader className="px-4 py-3 border-b border-border shrink-0">
             <SheetTitle>
               Community Comments{" "}
