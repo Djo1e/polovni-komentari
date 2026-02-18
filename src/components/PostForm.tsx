@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Props {
   onPost: (text: string) => Promise<void>;
@@ -26,25 +28,26 @@ export function PostForm({ onPost }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="p-3 border-b border-gray-200">
-      <textarea
+      <Textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Leave a comment..."
         maxLength={1000}
         rows={3}
-        className="w-full text-sm border border-gray-300 rounded-md p-2 resize-none focus:outline-none focus:ring-2 focus:ring-orange-400"
+        className="resize-none text-sm"
         disabled={posting}
       />
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
       <div className="flex justify-between items-center mt-2">
         <span className="text-xs text-gray-400">{text.length}/1000</span>
-        <button
+        <Button
           type="submit"
           disabled={!text.trim() || posting}
-          className="text-sm bg-orange-500 text-white px-3 py-1 rounded-md hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="bg-orange-500 text-white hover:bg-orange-600"
+          size="sm"
         >
           {posting ? "Posting…" : "Post"}
-        </button>
+        </Button>
       </div>
     </form>
   );

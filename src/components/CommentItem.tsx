@@ -1,4 +1,6 @@
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { Id } from "../../convex/_generated/dataModel";
+import { Button } from "@/components/ui/button";
 
 export interface Comment {
   _id: Id<"comments">;
@@ -20,31 +22,27 @@ export function CommentItem({ comment, currentVote, onVote }: Props) {
   return (
     <div className="flex gap-2 py-3 border-b border-gray-100 last:border-0">
       <div className="flex flex-col items-center gap-1 pt-0.5">
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => onVote("up")}
-          className={`text-lg leading-none transition-colors ${
-            currentVote === "up"
-              ? "text-orange-500"
-              : "text-gray-400 hover:text-gray-600"
-          }`}
           aria-label="Upvote"
+          className={currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}
         >
-          ▲
-        </button>
+          <ChevronUp className="h-4 w-4" />
+        </Button>
         <span className="text-xs font-semibold text-gray-600 tabular-nums">
           {comment.score}
         </span>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => onVote("down")}
-          className={`text-lg leading-none transition-colors ${
-            currentVote === "down"
-              ? "text-blue-500"
-              : "text-gray-400 hover:text-gray-600"
-          }`}
           aria-label="Downvote"
+          className={currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}
         >
-          ▼
-        </button>
+          <ChevronDown className="h-4 w-4" />
+        </Button>
       </div>
 
       <div className="flex-1 min-w-0">
