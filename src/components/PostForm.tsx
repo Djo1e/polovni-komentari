@@ -34,7 +34,7 @@ export function PostForm({ onPost }: Props) {
         placeholder="Leave a comment..."
         maxLength={1000}
         rows={3}
-        className="resize-none text-sm"
+        className="resize-none text-sm border-gray-300 focus-visible:ring-orange-400"
         disabled={posting}
       />
       {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
