@@ -41,7 +41,9 @@ export function Drawer({
     <>
       <button
         onClick={toggle}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-[999999] flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg py-3 shadow-lg hover:bg-orange-600 transition-colors"
+        className={`fixed top-1/2 -translate-y-1/2 z-[999999] flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg py-3 shadow-lg hover:bg-orange-600 transition-all duration-300 ease-in-out ${
+          open ? "right-[380px]" : "right-0"
+        }`}
         aria-label="Toggle comments"
       >
         <span className="text-base leading-none">💬</span>
@@ -66,7 +68,7 @@ export function Drawer({
           </h2>
           <button
             onClick={toggle}
-            className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+            className="flex items-center justify-center w-8 h-8 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors text-xl"
             aria-label="Close"
           >
             ×
