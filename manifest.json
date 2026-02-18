@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Polovni Automobili Comments",
+  "version": "1.0.0",
+  "description": "Community comments on car listings",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.polovniautomobili.com/auto-oglasi/oglas/*"],
+      "js": ["src/content/index.tsx"]
+    }
+  ]
+}
