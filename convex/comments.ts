@@ -23,7 +23,26 @@ export const getComments = query({
       })
     );
 
-    return withScores.sort((a, b) => b.score - a.score);
+    const topLevel = withScores
+      .filter((c) => !c.parentId)
+      .sort((a, b) => b.score - a.score);
+
+    const repliesByParent = new Map<string, typeof withScores>();
+    for (const c of withScores) {
+      if (c.parentId) {
+        const key = c.parentId;
+        if (!repliesByParent.has(key)) repliesByParent.set(key, []);
+        repliesByParent.get(key)!.push(c);
+      }
+    }
+    for (const replies of repliesByParent.values()) {
+      replies.sort((a, b) => b.score - a.score);
+    }
+
+    return topLevel.map((c) => ({
+      ...c,
+      replies: repliesByParent.get(c._id) ?? [],
+    }));
   },
 });
 
