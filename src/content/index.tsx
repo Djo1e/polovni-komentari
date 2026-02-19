@@ -13,8 +13,10 @@ async function main() {
 
   const host = document.createElement("div");
   host.id = "pa-comments-host";
-  host.style.position = "relative";
+  host.style.position = "fixed";
+  host.style.inset = "0";
   host.style.zIndex = "2147483647";
+  host.style.pointerEvents = "none";
   document.body.appendChild(host);
 
   const shadow = host.attachShadow({ mode: "open" });
@@ -24,9 +26,11 @@ async function main() {
   shadow.appendChild(style);
 
   const portalTarget = document.createElement("div");
+  portalTarget.style.pointerEvents = "auto";
   shadow.appendChild(portalTarget);
 
   const container = document.createElement("div");
+  container.style.pointerEvents = "auto";
   shadow.appendChild(container);
 
   createRoot(container).render(
