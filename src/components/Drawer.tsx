@@ -84,11 +84,11 @@ export function Drawer({
       </button>
 
       {/* Drawer panel */}
-      <div className="h-full bg-background shadow-lg flex flex-col">
+      <div className="h-full bg-background flex flex-col" style={{ boxShadow: "-4px 0 16px rgba(0, 0, 0, 0.12)" }}>
         {/* Header */}
         <div className="px-4 py-3 border-b border-border shrink-0 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-foreground">
-            Community Comments{" "}
+            Komentari{" "}
             {commentCount > 0 && (
               <span className="text-muted-foreground font-normal">
                 ({commentCount})
@@ -117,12 +117,12 @@ export function Drawer({
                 onClick={onRetry}
                 className="text-sm text-orange-500 hover:underline"
               >
-                Retry
+                Pokreni ponovo
               </button>
             </div>
           ) : comments.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-8">
-              No comments yet. Be the first!
+              Nema komentara još uvek. Napiši prvi!
             </p>
           ) : (
             comments.map((c) => (

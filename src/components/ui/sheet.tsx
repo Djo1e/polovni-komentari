@@ -23,8 +23,9 @@ const SheetContent = React.forwardRef<
     <SheetPortal container={container}>
       <DialogPrimitive.Content
         ref={ref}
+        style={{ position: "fixed", zIndex: 2147483647, pointerEvents: "auto" }}
         className={cn(
-          "absolute right-0 w-3/4 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg",
+          "fixed right-0 z-[2147483647] w-3/4 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg",
           className
         )}
         {...props}

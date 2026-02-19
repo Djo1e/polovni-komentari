@@ -71,7 +71,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousI
                   className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600"
                 >
                   <MessageSquare className="h-3 w-3" />
-                  Reply
+                  Odgovori
                 </button>
               )}
             </div>
