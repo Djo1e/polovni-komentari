@@ -1,4 +1,4 @@
-import { MessageSquare, ThumbsUp, UserX, Zap, Download, ChevronRight } from "lucide-react";
+import { MessageSquare, ThumbsUp, Shield, Zap, Download, ChevronRight } from "lucide-react";
 
 const features = [
   {
@@ -12,7 +12,7 @@ const features = [
     description: "Odgovori na komentare drugih korisnika i glasaj za korisne",
   },
   {
-    icon: UserX,
+    icon: Shield,
     title: "Bez naloga",
     description: "Koristi anonimno, bez registracije ili prijavljivanja",
   },
