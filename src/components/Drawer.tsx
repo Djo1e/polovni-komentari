@@ -50,7 +50,7 @@ export function Drawer({
       {/* Toggle tab - outside Sheet */}
       <button
         onClick={toggle}
-        className={`fixed top-1/2 -translate-y-1/2 z-[999999] flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 transition-all duration-300 ease-in-out ${
+        className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 transition-all duration-300 ease-in-out ${
           open ? "right-[32rem]" : "right-0"
         }`}
         aria-label="Toggle comments"
@@ -71,7 +71,7 @@ export function Drawer({
           chrome.storage.local.set({ [DRAWER_STATE_KEY]: v });
         }}
       >
-        <SheetContent className="w-[30%] top-[80px] h-[calc(100dvh-80px)] p-0 flex flex-col z-[999998]">
+        <SheetContent className="w-[30%] top-[80px] h-[calc(100dvh-80px)] p-0 flex flex-col">
           <SheetHeader className="px-4 py-3 border-b border-border shrink-0">
             <SheetTitle>
               Community Comments{" "}
