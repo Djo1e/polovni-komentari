@@ -7,7 +7,10 @@ export default defineSchema({
     authorId: v.string(),
     text: v.string(),
     createdAt: v.number(),
-  }).index("by_listing", ["listingId"]),
+    parentId: v.optional(v.id("comments")),
+  })
+    .index("by_listing", ["listingId"])
+    .index("by_parent", ["parentId"]),
 
   votes: defineTable({
     commentId: v.id("comments"),
