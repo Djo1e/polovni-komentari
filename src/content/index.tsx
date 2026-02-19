@@ -13,6 +13,8 @@ async function main() {
 
   const host = document.createElement("div");
   host.id = "pa-comments-host";
+  host.style.position = "relative";
+  host.style.zIndex = "2147483647";
   document.body.appendChild(host);
 
   const shadow = host.attachShadow({ mode: "open" });
