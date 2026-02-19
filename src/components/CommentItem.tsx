@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, User } from "lucide-react";
 import { Id } from "../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 
@@ -22,36 +22,46 @@ export function CommentItem({ comment, currentVote, onVote, anonymousId }: Props
   const isOwn = comment.authorId === anonymousId;
 
   return (
-    <div className="flex gap-2 py-3 border-b border-gray-100 last:border-0">
-      <div className="flex flex-col items-center gap-1 pt-0.5">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onVote("up")}
-          aria-label="Upvote"
-          disabled={isOwn}
-          className={currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}
-        >
-          <ChevronUp className="h-4 w-4" />
-        </Button>
-        <span className="text-xs font-semibold text-gray-600 tabular-nums">
-          {comment.score}
-        </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onVote("down")}
-          aria-label="Downvote"
-          disabled={isOwn}
-          className={currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}
-        >
-          <ChevronDown className="h-4 w-4" />
-        </Button>
+    <div className="flex gap-3 py-3 border-b border-gray-100 last:border-0">
+      {/* Avatar */}
+      <div className="shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+        <User className="h-4 w-4 text-gray-400" />
       </div>
 
+      {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-800 break-words">{comment.text}</p>
-        <p className="text-xs text-gray-400 mt-1">{timeAgo}</p>
+        <p className="text-sm text-gray-800 break-words leading-snug">{comment.text}</p>
+
+        {/* Footer: timestamp + votes */}
+        <div className="flex items-center justify-between mt-1.5">
+          <p className="text-xs text-gray-400">{timeAgo}</p>
+
+          <div className="flex items-center gap-0.5">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onVote("up")}
+              aria-label="Upvote"
+              disabled={isOwn}
+              className={`h-6 w-6 ${currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}`}
+            >
+              <ChevronUp className="h-3.5 w-3.5" />
+            </Button>
+            <span className="text-xs font-semibold text-gray-600 tabular-nums w-4 text-center">
+              {comment.score}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onVote("down")}
+              aria-label="Downvote"
+              disabled={isOwn}
+              className={`h-6 w-6 ${currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}`}
+            >
+              <ChevronDown className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
