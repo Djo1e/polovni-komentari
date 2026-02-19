@@ -1,4 +1,5 @@
 import { MessageSquare, ThumbsUp, Shield, Zap, Download } from "lucide-react";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 const features = [
   { icon: MessageSquare, title: "Komentariši oglase", description: "Ostavi komentar na bilo koji auto oglas" },
@@ -14,6 +15,10 @@ const steps = [
 ] as const;
 
 export default function App() {
+  if (window.location.pathname === "/privacy") {
+    return <PrivacyPolicy />;
+  }
+
   return (
     <div className="h-screen bg-[#0a0a0a] relative overflow-hidden flex flex-col">
       {/* Background ambient gradient */}
@@ -107,7 +112,7 @@ export default function App() {
           <div className="flex items-center justify-between text-[#a1a1aa] text-xs">
             <span>&copy; 2026 Polovni Automobili Comments</span>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-[#fafafa] transition-colors">Politika privatnosti</a>
+              <a href="/privacy" className="hover:text-[#fafafa] transition-colors">Politika privatnosti</a>
               <a href="#" className="hover:text-[#fafafa] transition-colors">GitHub</a>
             </div>
           </div>
