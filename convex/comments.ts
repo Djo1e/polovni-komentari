@@ -28,16 +28,31 @@ export const getComments = query({
 });
 
 export const postComment = mutation({
-  args: { listingId: v.string(), text: v.string(), authorId: v.string() },
-  handler: async (ctx, { listingId, text, authorId }) => {
+  args: {
+    listingId: v.string(),
+    text: v.string(),
+    authorId: v.string(),
+    parentId: v.optional(v.id("comments")),
+  },
+  handler: async (ctx, { listingId, text, authorId, parentId }) => {
     const trimmed = text.trim();
     if (trimmed.length === 0) throw new Error("Comment cannot be empty");
     if (trimmed.length > 1000) throw new Error("Comment too long");
+
+    if (parentId) {
+      const parent = await ctx.db.get(parentId);
+      if (!parent) throw new Error("Parent comment not found");
+      if (parent.listingId !== listingId)
+        throw new Error("Parent belongs to different listing");
+      if (parent.parentId) throw new Error("Cannot reply to a reply");
+    }
+
     return ctx.db.insert("comments", {
       listingId,
       authorId,
       text: trimmed,
       createdAt: Date.now(),
+      ...(parentId ? { parentId } : {}),
     });
   },
 });
