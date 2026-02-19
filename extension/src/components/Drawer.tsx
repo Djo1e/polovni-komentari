@@ -39,9 +39,7 @@ export function Drawer({
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    chrome.storage.local.get(DRAWER_STATE_KEY).then((result) => {
-      if (result[DRAWER_STATE_KEY] === true) setOpen(true);
-    });
+    if (localStorage.getItem(DRAWER_STATE_KEY) === "true") setOpen(true);
   }, []);
 
   function toggle() {
@@ -49,7 +47,7 @@ export function Drawer({
     const next = !open;
     setAnimating(true);
     setOpen(next);
-    chrome.storage.local.set({ [DRAWER_STATE_KEY]: next });
+    localStorage.setItem(DRAWER_STATE_KEY, String(next));
   }
 
   return (

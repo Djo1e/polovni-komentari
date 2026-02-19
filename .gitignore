@@ -2,8 +2,3 @@ node_modules/
 dist/
 .env
 *.local
-tsconfig.tsbuildinfo
-# Compiled JS artifacts (TypeScript source is canonical)
-convex/*.js
-src/**/*.js
-tests/**/*.js
