@@ -16,6 +16,7 @@ interface Props {
   onPost: (text: string) => Promise<void>;
   error: string | null;
   onRetry: () => void;
+  anonymousId: string;
 }
 
 const DRAWER_STATE_KEY = "paCommentsDrawerOpen";
@@ -28,6 +29,7 @@ export function Drawer({
   onPost,
   error,
   onRetry,
+  anonymousId,
 }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -48,14 +50,14 @@ export function Drawer({
       {/* Toggle tab - outside Sheet */}
       <button
         onClick={toggle}
-        className={`fixed top-1/2 -translate-y-1/2 z-[999999] flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg py-3 shadow-lg hover:bg-orange-600 transition-all duration-300 ease-in-out ${
-          open ? "right-[380px]" : "right-0"
+        className={`fixed top-1/2 -translate-y-1/2 z-[999999] flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 transition-all duration-300 ease-in-out ${
+          open ? "right-[32rem]" : "right-0"
         }`}
         aria-label="Toggle comments"
       >
-        <span className="text-base leading-none">💬</span>
+        <span className="text-lg leading-none">💬</span>
         {commentCount > 0 && (
-          <span className="text-[10px] font-bold leading-none">
+          <span className="text-[20px] font-bold leading-none">
             {commentCount > 99 ? "99+" : commentCount}
           </span>
         )}
@@ -69,7 +71,7 @@ export function Drawer({
           chrome.storage.local.set({ [DRAWER_STATE_KEY]: v });
         }}
       >
-        <SheetContent className="w-[380px] top-[80px] p-0 flex flex-col">
+        <SheetContent className="w-[30%] top-0 h-[100dvh] p-0 pt-[80px] flex flex-col">
           <SheetHeader className="px-4 py-3 border-b border-border shrink-0">
             <SheetTitle>
               Community Comments{" "}
@@ -107,6 +109,7 @@ export function Drawer({
                   comment={c}
                   currentVote={currentVotes[c._id] ?? null}
                   onVote={(dir) => onVote(c._id, dir)}
+                  anonymousId={anonymousId}
                 />
               ))
             )}

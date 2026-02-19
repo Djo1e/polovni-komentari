@@ -65,6 +65,7 @@ function CommentApp({ listingId, anonymousId }: Omit<AppProps, "portalContainer"
       onPost={handlePost}
       error={connectionError}
       onRetry={() => setError(null)}
+      anonymousId={anonymousId}
     />
   );
 }

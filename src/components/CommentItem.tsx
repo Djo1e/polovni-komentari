@@ -14,10 +14,12 @@ interface Props {
   comment: Comment;
   currentVote: "up" | "down" | null;
   onVote: (direction: "up" | "down") => void;
+  anonymousId: string;
 }
 
-export function CommentItem({ comment, currentVote, onVote }: Props) {
+export function CommentItem({ comment, currentVote, onVote, anonymousId }: Props) {
   const timeAgo = formatTimeAgo(comment.createdAt);
+  const isOwn = comment.authorId === anonymousId;
 
   return (
     <div className="flex gap-2 py-3 border-b border-gray-100 last:border-0">
@@ -27,6 +29,7 @@ export function CommentItem({ comment, currentVote, onVote }: Props) {
           size="icon"
           onClick={() => onVote("up")}
           aria-label="Upvote"
+          disabled={isOwn}
           className={currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}
         >
           <ChevronUp className="h-4 w-4" />
@@ -39,6 +42,7 @@ export function CommentItem({ comment, currentVote, onVote }: Props) {
           size="icon"
           onClick={() => onVote("down")}
           aria-label="Downvote"
+          disabled={isOwn}
           className={currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}
         >
           <ChevronDown className="h-4 w-4" />
