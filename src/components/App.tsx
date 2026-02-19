@@ -14,6 +14,10 @@ interface AppProps {
   portalContainer: HTMLElement;
 }
 
+function countAllComments(comments: Comment[]): number {
+  return comments.reduce((sum, c) => sum + 1 + (c.replies?.length ?? 0), 0);
+}
+
 function CommentApp({ listingId, anonymousId }: Omit<AppProps, "portalContainer">) {
   const commentsRaw = useQuery(api.comments.getComments, { listingId });
   const voteMutation = useMutation(api.votes.vote);
@@ -48,6 +52,18 @@ function CommentApp({ listingId, anonymousId }: Omit<AppProps, "portalContainer"
     [postMutation, listingId, anonymousId]
   );
 
+  const handleReply = useCallback(
+    async (parentId: string, text: string) => {
+      await postMutation({
+        listingId,
+        text,
+        authorId: anonymousId,
+        parentId: parentId as Id<"comments">,
+      });
+    },
+    [postMutation, listingId, anonymousId]
+  );
+
   const mergedVotes = {
     ...Object.fromEntries(
       Object.entries(localVotes).filter(([, v]) => v !== null) as [string, "up" | "down"][]
@@ -59,10 +75,11 @@ function CommentApp({ listingId, anonymousId }: Omit<AppProps, "portalContainer"
   return (
     <Drawer
       comments={comments}
-      commentCount={comments.length}
+      commentCount={countAllComments(comments)}
       currentVotes={mergedVotes}
       onVote={handleVote}
       onPost={handlePost}
+      onReply={handleReply}
       error={connectionError}
       onRetry={() => setError(null)}
       anonymousId={anonymousId}

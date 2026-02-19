@@ -1,12 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Comment, CommentItem } from "./CommentItem";
 import { PostForm } from "./PostForm";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { X } from "lucide-react";
 
 interface Props {
   comments: Comment[];
@@ -14,6 +9,7 @@ interface Props {
   currentVotes: Record<string, "up" | "down">;
   onVote: (commentId: string, direction: "up" | "down") => void;
   onPost: (text: string) => Promise<void>;
+  onReply: (parentId: string, text: string) => Promise<void>;
   error: string | null;
   onRetry: () => void;
   anonymousId: string;
@@ -27,11 +23,14 @@ export function Drawer({
   currentVotes,
   onVote,
   onPost,
+  onReply,
   error,
   onRetry,
   anonymousId,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [animating, setAnimating] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     chrome.storage.local.get(DRAWER_STATE_KEY).then((result) => {
@@ -40,19 +39,34 @@ export function Drawer({
   }, []);
 
   function toggle() {
+    if (animating) return;
     const next = !open;
+    setAnimating(true);
     setOpen(next);
     chrome.storage.local.set({ [DRAWER_STATE_KEY]: next });
   }
 
   return (
-    <>
-      {/* Toggle tab - outside Sheet */}
+    <div
+      ref={panelRef}
+      style={{
+        position: "fixed",
+        zIndex: 2147483647,
+        top: 0,
+        right: 0,
+        height: "100dvh",
+        width: "30%",
+        transform: open ? "translateX(0)" : "translateX(100%)",
+        transition: "transform 500ms ease-in-out",
+      }}
+      onTransitionEnd={() => setAnimating(false)}
+    >
+      {/* Toggle tab */}
       <button
         onClick={toggle}
-        className={`absolute top-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 transition-all duration-300 ease-in-out ${
-          open ? "right-[32rem]" : "right-0"
-        }`}
+        disabled={animating}
+        style={{ transform: "translateX(-100%) translateY(-50%)" }}
+        className="absolute left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80"
         aria-label="Toggle comments"
       >
         <span className="text-lg leading-none">💬</span>
@@ -63,59 +77,61 @@ export function Drawer({
         )}
       </button>
 
-      <Sheet
-        open={open}
-        modal={false}
-        onOpenChange={(v) => {
-          setOpen(v);
-          chrome.storage.local.set({ [DRAWER_STATE_KEY]: v });
-        }}
-      >
-        <SheetContent className="w-[30%] top-[80px] h-[calc(100dvh-80px)] p-0 flex flex-col">
-          <SheetHeader className="px-4 py-3 border-b border-border shrink-0">
-            <SheetTitle>
-              Community Comments{" "}
-              {commentCount > 0 && (
-                <span className="text-muted-foreground font-normal">
-                  ({commentCount})
-                </span>
-              )}
-            </SheetTitle>
-          </SheetHeader>
-
-          <div className="shrink-0">
-            <PostForm onPost={onPost} />
-          </div>
-
-          <div className="flex-1 overflow-y-auto px-3">
-            {error ? (
-              <div className="flex flex-col items-center gap-2 py-8 text-center">
-                <p className="text-sm text-gray-500">{error}</p>
-                <button
-                  onClick={onRetry}
-                  className="text-sm text-orange-500 hover:underline"
-                >
-                  Retry
-                </button>
-              </div>
-            ) : comments.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-8">
-                No comments yet. Be the first!
-              </p>
-            ) : (
-              comments.map((c) => (
-                <CommentItem
-                  key={c._id}
-                  comment={c}
-                  currentVote={currentVotes[c._id] ?? null}
-                  onVote={(dir) => onVote(c._id, dir)}
-                  anonymousId={anonymousId}
-                />
-              ))
+      {/* Drawer panel */}
+      <div className="h-full bg-background shadow-lg flex flex-col">
+        {/* Header */}
+        <div className="px-4 py-3 border-b border-border shrink-0 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-foreground">
+            Community Comments{" "}
+            {commentCount > 0 && (
+              <span className="text-muted-foreground font-normal">
+                ({commentCount})
+              </span>
             )}
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
+          </h2>
+          <button
+            onClick={toggle}
+            disabled={animating}
+            className="rounded-sm opacity-70 hover:opacity-100"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="shrink-0">
+          <PostForm onPost={onPost} />
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-3">
+          {error ? (
+            <div className="flex flex-col items-center gap-2 py-8 text-center">
+              <p className="text-sm text-gray-500">{error}</p>
+              <button
+                onClick={onRetry}
+                className="text-sm text-orange-500 hover:underline"
+              >
+                Retry
+              </button>
+            </div>
+          ) : comments.length === 0 ? (
+            <p className="text-sm text-gray-400 text-center py-8">
+              No comments yet. Be the first!
+            </p>
+          ) : (
+            comments.map((c) => (
+              <CommentItem
+                key={c._id}
+                comment={c}
+                currentVotes={currentVotes}
+                onVote={onVote}
+                onReply={onReply}
+                anonymousId={anonymousId}
+              />
+            ))
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

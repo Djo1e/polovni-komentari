@@ -1,6 +1,8 @@
-import { ChevronDown, ChevronUp, User } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, ChevronUp, MessageSquare, User } from "lucide-react";
 import { Id } from "../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 export interface Comment {
   _id: Id<"comments">;
@@ -8,61 +10,146 @@ export interface Comment {
   score: number;
   createdAt: number;
   authorId: string;
+  parentId?: Id<"comments">;
+  replies?: Comment[];
 }
 
 interface Props {
   comment: Comment;
-  currentVote: "up" | "down" | null;
-  onVote: (direction: "up" | "down") => void;
+  currentVotes: Record<string, "up" | "down">;
+  onVote: (commentId: string, direction: "up" | "down") => void;
+  onReply: (parentId: string, text: string) => Promise<void>;
   anonymousId: string;
+  isReply?: boolean;
 }
 
-export function CommentItem({ comment, currentVote, onVote, anonymousId }: Props) {
+export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousId, isReply }: Props) {
+  const [showReplyForm, setShowReplyForm] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [posting, setPosting] = useState(false);
   const timeAgo = formatTimeAgo(comment.createdAt);
   const isOwn = comment.authorId === anonymousId;
+  const currentVote = currentVotes[comment._id] ?? null;
+
+  async function handleReplySubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!replyText.trim()) return;
+    setPosting(true);
+    try {
+      await onReply(comment._id, replyText);
+      setReplyText("");
+      setShowReplyForm(false);
+    } finally {
+      setPosting(false);
+    }
+  }
 
   return (
-    <div className="flex gap-3 py-3 border-b border-gray-100 last:border-0">
-      {/* Avatar */}
-      <div className="shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-        <User className="h-4 w-4 text-gray-400" />
-      </div>
+    <div>
+      <div className="flex gap-3 py-3 border-b border-gray-100 last:border-0">
+        {/* Avatar */}
+        <div className="shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+          <User className="h-4 w-4 text-gray-400" />
+        </div>
 
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-800 break-words leading-snug">{comment.text}</p>
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm text-gray-800 break-words leading-snug">{comment.text}</p>
 
-        {/* Footer: timestamp + votes */}
-        <div className="flex items-center justify-between mt-1.5">
-          <p className="text-xs text-gray-400">{timeAgo}</p>
+          {/* Footer: timestamp + actions + votes */}
+          <div className="flex items-center justify-between mt-1.5 -mb-1">
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-gray-400 leading-7">{timeAgo}</p>
+              {!isReply && (
+                <button
+                  onClick={() => setShowReplyForm(!showReplyForm)}
+                  className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600"
+                >
+                  <MessageSquare className="h-3 w-3" />
+                  Reply
+                </button>
+              )}
+            </div>
 
-          <div className="flex items-center gap-0.5">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onVote("up")}
-              aria-label="Upvote"
-              disabled={isOwn}
-              className={`h-6 w-6 ${currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}`}
-            >
-              <ChevronUp className="h-3.5 w-3.5" />
-            </Button>
-            <span className="text-xs font-semibold text-gray-600 tabular-nums w-4 text-center">
-              {comment.score}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onVote("down")}
-              aria-label="Downvote"
-              disabled={isOwn}
-              className={`h-6 w-6 ${currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}`}
-            >
-              <ChevronDown className="h-3.5 w-3.5" />
-            </Button>
+            <div className="flex items-center gap-0.5">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onVote(comment._id, "up")}
+                aria-label="Upvote"
+                disabled={isOwn}
+                className={`h-7 w-7 ${currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}`}
+              >
+                <ChevronUp className="h-4 w-4" />
+              </Button>
+              <span className="text-xs font-semibold text-gray-600 tabular-nums w-4 text-center">
+                {comment.score}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onVote(comment._id, "down")}
+                aria-label="Downvote"
+                disabled={isOwn}
+                className={`h-7 w-7 ${currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}`}
+              >
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
+
+          {/* Inline reply form */}
+          {showReplyForm && (
+            <form onSubmit={handleReplySubmit} className="mt-2">
+              <Textarea
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                placeholder="Write a reply..."
+                maxLength={1000}
+                rows={2}
+                className="resize-none text-sm"
+                disabled={posting}
+                autoFocus
+              />
+              <div className="flex justify-end gap-2 mt-1.5">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setShowReplyForm(false); setReplyText(""); }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={!replyText.trim() || posting}
+                  className="bg-orange-500 text-white hover:bg-orange-600"
+                  size="sm"
+                >
+                  {posting ? "Posting\u2026" : "Reply"}
+                </Button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
+
+      {/* Replies */}
+      {(comment.replies ?? []).length > 0 && (
+        <div className="ml-6 border-l-2 border-gray-100 pl-3">
+          {(comment.replies ?? []).map((reply) => (
+            <CommentItem
+              key={reply._id}
+              comment={reply}
+              currentVotes={currentVotes}
+              onVote={onVote}
+              onReply={onReply}
+              anonymousId={anonymousId}
+              isReply
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
