@@ -86,7 +86,7 @@ function ProductDemo() {
             <Comment username="BMW_NS" text="Kilometraža deluje sumnjivo..." time="pre 45min" votes={8} voted />
           </div>
           <div className="px-2 py-1.5 comment-enter comment-enter-3">
-            <Comment username="Fiat_KG" text="Za 2021. godište korektna cena." time="pre 30min" votes={3} />
+            <Comment username="Fiat_KG" text="Za 2018. godište korektna cena." time="pre 30min" votes={3} />
           </div>
         </div>
       </div>
