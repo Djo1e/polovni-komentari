@@ -104,7 +104,7 @@ export default function App() {
       <div className="h-1 bg-[#E5A100]" />
 
       {/* Hero split */}
-      <div className="flex-1 flex items-center justify-center px-6 lg:px-16">
+      <div className="flex-1 flex items-center justify-center px-6 lg:px-10">
         <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Left: Hero */}
           <div className="text-center lg:text-left animate-fade-up">
