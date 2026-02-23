@@ -124,8 +124,10 @@ export default function App() {
               <span className="text-[#E5A100]">Komentari</span>
             </h1>
 
-            <p className="font-[Outfit] font-500 text-lg sm:text-xl text-[#6b7280] mb-8">
-              Komentari na svakom oglasu
+            <p className="font-[Outfit] text-lg sm:text-xl text-[#6b7280] mb-8">
+              Komentari na polovnim automobilima.
+              <br />
+              <span className="font-600 text-[#1a1a1a]">Pročitaj šta drugi misle.</span>
             </p>
 
             <a
