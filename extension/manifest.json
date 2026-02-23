@@ -10,7 +10,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.polovniautomobili.com/auto-oglasi/*/*"],
+      "matches": ["https://www.polovniautomobili.com/*"],
       "js": ["src/content/index.tsx"]
     }
   ]
