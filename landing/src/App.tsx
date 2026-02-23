@@ -21,11 +21,11 @@ function Comment({ username, text, time, votes, voted }: {
 }) {
   return (
     <div className="flex gap-1.5">
-      <div className="w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center shrink-0 mt-0.5">
+      <div className="w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
         <User className="w-2 h-2 text-gray-400" />
       </div>
       <div className="flex-1 min-w-0">
-        <span className="text-[8px] font-medium text-gray-500">{username}</span>
+        <span className="text-[8px] font-medium text-gray-500 leading-[16px]">{username}</span>
         <p className="text-[9px] text-gray-800 leading-snug">{text}</p>
         <div className="flex items-center justify-between mt-0.5">
           <div className="flex items-center gap-1.5">
@@ -49,7 +49,7 @@ function Reply({ username, text, time, votes }: {
   return (
     <div className="ml-5 mt-1 pl-1.5 border-l border-gray-100">
       <div className="flex gap-1">
-        <div className="w-3 h-3 rounded-full bg-gray-100 flex items-center justify-center shrink-0 mt-0.5">
+        <div className="w-3 h-3 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
           <User className="w-1.5 h-1.5 text-gray-400" />
         </div>
         <div className="flex-1">
