@@ -71,7 +71,7 @@ function Reply({ username, text, time, votes }: {
 
 function ProductDemo() {
   return (
-    <div className="relative w-full max-w-[600px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
+    <div className="relative w-full max-w-[750px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
       {/* Full-width screenshot */}
       <img
         src="/demo.png"
@@ -85,14 +85,14 @@ function ProductDemo() {
         style={{ left: "63.5%", top: "28%", right: "0.5%", bottom: "5%" }}
       >
         <div className="divide-y divide-gray-100">
-          <div className="px-2 py-1.5">
+          <div className="px-2 py-1.5 comment-enter comment-enter-1">
             <Comment username="Golf123" text="Deluje solidno za te pare." time="pre 2h" votes={5} voted />
             <Reply username="Audi_BG" text="Slažem se, proverio bih motor." time="pre 1h" votes={2} />
           </div>
-          <div className="px-2 py-1.5">
+          <div className="px-2 py-1.5 comment-enter comment-enter-2">
             <Comment username="BMW_NS" text="Kilometraža deluje sumnjivo..." time="pre 45min" votes={8} voted />
           </div>
-          <div className="px-2 py-1.5">
+          <div className="px-2 py-1.5 comment-enter comment-enter-3">
             <Comment username="Fiat_KG" text="Za 2021. godište korektna cena." time="pre 30min" votes={3} />
           </div>
         </div>
