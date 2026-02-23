@@ -64,7 +64,7 @@ function Reply({ username, text, time, votes }: {
 
 function ProductDemo() {
   return (
-    <div className="relative w-full max-w-[975px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
+    <div className="relative w-full max-w-[975px] width-[800px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
       {/* Full-width screenshot */}
       <img
         src="/demo.webp"
@@ -105,7 +105,7 @@ export default function App() {
 
       {/* Hero split */}
       <div className="flex-1 flex items-center justify-center px-6 lg:px-10">
-        <div className="w-full max-w-5xl flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        <div className="w-full max-w-7xl flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Left: Hero */}
           <div className="text-center lg:text-left animate-fade-up">
             <div className="mb-5">
