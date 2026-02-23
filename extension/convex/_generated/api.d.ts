@@ -9,6 +9,7 @@
  */
 
 import type * as comments from "../comments.js";
+import type * as listings from "../listings.js";
 import type * as votes from "../votes.js";
 
 import type {
@@ -19,6 +20,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   comments: typeof comments;
+  listings: typeof listings;
   votes: typeof votes;
 }>;
 
