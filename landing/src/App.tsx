@@ -64,7 +64,7 @@ function Reply({ username, text, time, votes }: {
 
 function ProductDemo() {
   return (
-    <div className="relative w-full max-w-[750px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
+    <div className="relative w-full max-w-[975px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
       {/* Full-width screenshot */}
       <img
         src="/demo.webp"
