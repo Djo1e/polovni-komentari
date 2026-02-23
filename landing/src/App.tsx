@@ -173,10 +173,7 @@ export default function App() {
 
           <div className="flex items-center justify-between text-[#6b7280] text-xs border-t border-[#e5e5e5] pt-4">
             <span>&copy; 2026 Polovni Komentari</span>
-            <div className="flex gap-4">
-              <a href="/privacy" className="hover:text-[#1a1a1a] transition-colors">Politika privatnosti</a>
-              <a href="#" className="hover:text-[#1a1a1a] transition-colors">GitHub</a>
-            </div>
+            <a href="/privacy" className="hover:text-[#1a1a1a] transition-colors">Politika privatnosti</a>
           </div>
         </div>
       </div>
