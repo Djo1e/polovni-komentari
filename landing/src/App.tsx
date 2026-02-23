@@ -1,12 +1,5 @@
-import { MessageSquare, ThumbsUp, Shield, Zap, Download, ChevronUp, ChevronDown, User } from "lucide-react";
+import { Download, ChevronUp, ChevronDown, User } from "lucide-react";
 import PrivacyPolicy from "./PrivacyPolicy";
-
-const features = [
-  { icon: MessageSquare, title: "Komentariši oglase", description: "Ostavi komentar na bilo koji auto oglas" },
-  { icon: ThumbsUp, title: "Odgovori i glasaj", description: "Glasaj za korisne komentare drugih" },
-  { icon: Shield, title: "Bez naloga", description: "Anonimno, bez registracije" },
-  { icon: Zap, title: "U realnom vremenu", description: "Komentari se pojavljuju odmah" },
-] as const;
 
 const steps = [
   { number: "01", text: "Instaliraj ekstenziju" },
@@ -74,7 +67,7 @@ function ProductDemo() {
     <div className="relative w-full max-w-[750px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
       {/* Full-width screenshot */}
       <img
-        src="/demo.png"
+        src="/demo.webp"
         alt="Polovni Komentari na polovniautomobili.com"
         className="block w-full h-auto"
       />
@@ -150,26 +143,6 @@ export default function App() {
           <div className="hidden lg:flex flex-1 justify-center animate-fade-up-delay-2">
             <ProductDemo />
           </div>
-        </div>
-      </div>
-
-      {/* Features */}
-      <div className="px-6 pb-4">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
-          {features.map((feature, i) => (
-            <div
-              key={feature.title}
-              className={`feature-card bg-[#fafafa] rounded-md p-4 animate-fade-up-delay-${i + 1}`}
-            >
-              <feature.icon className="w-5 h-5 text-[#E5A100] mb-2" />
-              <h3 className="font-[Outfit] font-700 text-sm text-[#1a1a1a] mb-1">
-                {feature.title}
-              </h3>
-              <p className="text-[#6b7280] text-xs leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
         </div>
       </div>
 

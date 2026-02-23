@@ -109,7 +109,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousI
               <Textarea
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Write a reply..."
+                placeholder="Napiši odgovor..."
                 maxLength={1000}
                 rows={2}
                 className="resize-none text-sm"
@@ -123,7 +123,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousI
                   size="sm"
                   onClick={() => { setShowReplyForm(false); setReplyText(""); }}
                 >
-                  Cancel
+                  Otkaži
                 </Button>
                 <Button
                   type="submit"
@@ -131,7 +131,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousI
                   className="bg-orange-500 text-white hover:bg-orange-600"
                   size="sm"
                 >
-                  {posting ? "Posting\u2026" : "Reply"}
+                  {posting ? "Slanje\u2026" : "Odgovori"}
                 </Button>
               </div>
             </form>
@@ -162,12 +162,12 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousI
 function formatTimeAgo(timestamp: number): string {
   const diff = Date.now() - timestamp;
   const minutes = Math.floor(diff / 60_000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 1) return "upravo";
+  if (minutes < 60) return `pre ${minutes} min`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `pre ${hours}h`;
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
+  if (days < 7) return `pre ${days}d`;
   const weeks = Math.floor(days / 7);
-  return `${weeks}w ago`;
+  return `pre ${weeks}n`;
 }

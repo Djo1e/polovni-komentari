@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Polovni Automobili Comments",
+  "name": "Polovni Komentari",
   "version": "1.0.0",
-  "description": "Community comments on car listings",
+  "description": "Komentari na oglasima na Polovnim Automobilima",
   "icons": {
     "16": "public/icons/icon16.png",
     "48": "public/icons/icon48.png",
