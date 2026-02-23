@@ -3,7 +3,7 @@ import PrivacyPolicy from "./PrivacyPolicy";
 
 const steps = [
   { number: "01", text: "Instaliraj ekstenziju" },
-  { number: "02", text: "Otvori oglas na Polovnim" },
+  { number: "02", text: "Otvori oglas" },
   { number: "03", text: "Ostavi komentar" },
 ] as const;
 
