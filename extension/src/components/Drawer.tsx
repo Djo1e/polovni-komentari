@@ -99,7 +99,7 @@ export function Drawer({
       >
         {/* Header */}
         <div className="px-4 py-3 border-b border-border shrink-0 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-foreground">Komentari</h2>
+          <h2 className="text-base font-semibold text-foreground">Komentari</h2>
           <button
             onClick={toggle}
             disabled={animating}
@@ -115,7 +115,7 @@ export function Drawer({
           <div className="flex border-b border-border shrink-0">
             <button
               onClick={() => setActiveTab("listing")}
-              className={`flex-1 text-xs py-2 font-medium transition-colors ${
+              className={`flex-1 text-base py-2 font-medium transition-colors ${
                 activeTab === "listing"
                   ? "text-orange-500 border-b-2 border-orange-500"
                   : "text-muted-foreground hover:text-foreground"
@@ -130,7 +130,7 @@ export function Drawer({
             </button>
             <button
               onClick={() => setActiveTab("latest")}
-              className={`flex-1 text-xs py-2 font-medium transition-colors ${
+              className={`flex-1 text-base py-2 font-medium transition-colors ${
                 activeTab === "latest"
                   ? "text-orange-500 border-b-2 border-orange-500"
                   : "text-muted-foreground hover:text-foreground"
