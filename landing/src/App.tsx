@@ -64,19 +64,20 @@ function Reply({ username, text, time, votes }: {
 
 function ProductDemo() {
   return (
-    <div className="relative w-full max-w-[975px] width-[800px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
-      {/* Full-width screenshot */}
-      <img
-        src="/demo.webp"
-        alt="Polovni Komentari na polovniautomobili.com"
-        className="block w-full h-auto"
-      />
+    <div className="w-full max-w-[975px] rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[#e5e5e5]">
+      {/* Inner wrapper: crops left ~30% on mobile, full on desktop */}
+      <div className="relative w-[145%] -ml-[40%] lg:w-full lg:ml-0">
+        <img
+          src="/demo.webp"
+          alt="Polovni Komentari na polovniautomobili.com"
+          className="block w-full h-auto"
+        />
 
-      {/* Comments overlay covering "Nema komentara" empty area */}
-      <div
-        className="absolute bg-white overflow-hidden"
-        style={{ left: "63.5%", top: "30%", right: "0.5%", bottom: "5%" }}
-      >
+        {/* Comments overlay covering "Nema komentara" empty area */}
+        <div
+          className="absolute bg-white overflow-hidden"
+          style={{ left: "63.5%", top: "30%", right: "0.5%", bottom: "5%" }}
+        >
         <div className="divide-y divide-gray-100">
           <div className="px-2 py-1.5 comment-enter comment-enter-1">
             <Comment username="Golf123" text="Deluje solidno za te pare." time="pre 2h" votes={5} voted />
@@ -90,6 +91,7 @@ function ProductDemo() {
           </div>
         </div>
       </div>
+      </div>
     </div>
   );
 }
@@ -100,7 +102,7 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen bg-white overflow-hidden flex flex-col">
+    <div className="min-h-screen lg:h-screen bg-white lg:overflow-hidden flex flex-col">
       <div className="h-1 bg-[#E5A100]" />
 
       {/* Hero split */}
@@ -142,7 +144,7 @@ export default function App() {
           </div>
 
           {/* Right: Product demo */}
-          <div className="hidden lg:flex flex-1 justify-center animate-fade-up-delay-2">
+          <div className="flex flex-1 justify-center animate-fade-up-delay-2">
             <ProductDemo />
           </div>
         </div>
