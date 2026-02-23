@@ -14,7 +14,7 @@ function Comment({ username, text, time, votes, voted }: {
 }) {
   return (
     <div className="flex gap-1.5">
-      <div className="w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+      <div className="mt-2 w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
         <User className="w-2 h-2 text-gray-400" />
       </div>
       <div className="flex-1 min-w-0">
