@@ -75,7 +75,7 @@ function ProductDemo() {
       {/* Comments overlay covering "Nema komentara" empty area */}
       <div
         className="absolute bg-white overflow-hidden"
-        style={{ left: "63.5%", top: "28%", right: "0.5%", bottom: "5%" }}
+        style={{ left: "63.5%", top: "30%", right: "0.5%", bottom: "5%" }}
       >
         <div className="divide-y divide-gray-100">
           <div className="px-2 py-1.5 comment-enter comment-enter-1">
