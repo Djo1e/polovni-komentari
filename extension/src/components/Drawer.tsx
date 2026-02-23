@@ -69,7 +69,7 @@ export function Drawer({
         top: 0,
         right: 0,
         height: "100dvh",
-        width: "30%",
+        width: "40%",
         transform: open ? "translateX(0)" : "translateX(100%)",
         transition: "transform 500ms ease-in-out",
       }}
@@ -79,9 +79,10 @@ export function Drawer({
       <button
         onClick={toggle}
         disabled={animating}
-        style={{ transform: "translateX(-100%) translateY(-50%)" }}
-        className="absolute left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80"
+        style={{ transform: "translateX(-100%) translateY(-50%)", boxShadow: "-4px 0 16px rgba(0, 0, 0, 0.12)" }}
+        className="absolute cursor-pointer left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80"
         aria-label="Toggle comments"
+
       >
         <span className="text-lg leading-none">💬</span>
         {listingId && commentCount > 0 && (
@@ -120,7 +121,7 @@ export function Drawer({
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Овај оглас
+              Ovaj oglas
               {commentCount > 0 && (
                 <span className="ml-1 text-muted-foreground font-normal">
                   ({commentCount})
@@ -135,7 +136,7 @@ export function Drawer({
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Најновије
+              Najnoviji
             </button>
           </div>
         )}

@@ -7,13 +7,13 @@ export interface ListingInfo {
 
 export function extractListingInfo(): ListingInfo | null {
   try {
-    const titleEl = document.querySelector("h1.uk-article-title");
-    const priceEl = document.querySelector(".price-item .regularPriceColor");
+    const titleEl = document.querySelector(".table-cell-left h1");
+    const priceEl = document.querySelector("span.priceClassified.regularPriceColor");
     const imageEl = document.querySelector(
-      ".pi-img-wrapper img"
+      "#image-gallery img"
     ) as HTMLImageElement | null;
 
-    const title = titleEl?.textContent?.trim() ?? "";
+    const title = titleEl?.childNodes[0]?.textContent?.trim() ?? "";
     const price = priceEl?.textContent?.trim() ?? "";
     const imageUrl = imageEl?.src ?? "";
 
