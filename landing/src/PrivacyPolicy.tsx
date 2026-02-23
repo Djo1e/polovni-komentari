@@ -4,7 +4,7 @@ const sections = [
   {
     title: "Šta radi ova ekstenzija",
     content:
-      "Polovni Automobili Comments dodaje sekciju za komentare na stranice oglasa na polovniautomobili.com. Korisnici mogu da ostavljaju komentare, odgovaraju drugima i glasaju za komentare.",
+      "Polovni Komentari dodaje sekciju za komentare na stranice oglasa na polovniautomobili.com. Korisnici mogu da ostavljaju komentare, odgovaraju drugima i glasaju za komentare.",
   },
   {
     title: "Podaci koje prikupljamo",
@@ -54,7 +54,7 @@ const sectionsEn = [
   {
     title: "What this extension does",
     content:
-      "Polovni Automobili Comments adds a community comment section to car listing pages on polovniautomobili.com. Users can post comments, reply to others, and vote on comments.",
+      "Polovni Komentari adds a community comment section to car listing pages on polovniautomobili.com. Users can post comments, reply to others, and vote on comments.",
   },
   {
     title: "Data we collect",
@@ -104,11 +104,11 @@ function SectionList({ data }: { data: typeof sections | typeof sectionsEn }) {
     <div className="space-y-8">
       {data.map((section) => (
         <div key={section.title}>
-          <h2 className="font-[Outfit] font-700 text-lg text-[#fafafa] mb-2">
+          <h2 className="font-[Outfit] font-700 text-lg text-[#1a1a1a] mb-2">
             {section.title}
           </h2>
           {"content" in section && (
-            <p className="text-[#a1a1aa] text-sm leading-relaxed">
+            <p className="text-[#6b7280] text-sm leading-relaxed">
               {section.content}
             </p>
           )}
@@ -117,9 +117,9 @@ function SectionList({ data }: { data: typeof sections | typeof sectionsEn }) {
               {section.items.map((item) => (
                 <li
                   key={item}
-                  className="text-[#a1a1aa] text-sm leading-relaxed flex gap-2"
+                  className="text-[#6b7280] text-sm leading-relaxed flex gap-2"
                 >
-                  <span className="text-[#f97316] shrink-0">•</span>
+                  <span className="text-[#E5A100] shrink-0">•</span>
                   {item}
                 </li>
               ))}
@@ -133,40 +133,40 @@ function SectionList({ data }: { data: typeof sections | typeof sectionsEn }) {
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] relative">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)]" />
+    <div className="min-h-screen bg-white">
+      <div className="h-1 bg-[#E5A100]" />
 
-      <div className="relative z-10 max-w-2xl mx-auto px-6 py-12">
+      <div className="max-w-2xl mx-auto px-6 py-12">
         <a
           href="/"
-          className="inline-flex items-center gap-2 text-[#a1a1aa] hover:text-[#fafafa] transition-colors text-sm mb-8"
+          className="inline-flex items-center gap-2 text-[#6b7280] hover:text-[#1a1a1a] transition-colors text-sm mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
           Nazad
         </a>
 
-        <h1 className="font-[Outfit] font-900 text-3xl md:text-4xl text-[#fafafa] mb-2">
+        <h1 className="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
           Politika privatnosti
         </h1>
-        <p className="text-[#a1a1aa] text-sm mb-10">
+        <p className="text-[#6b7280] text-sm mb-10">
           Poslednje ažuriranje: 19. februar 2026.
         </p>
 
         <SectionList data={sections} />
 
-        <div className="mt-16 pt-8 border-t border-[#27272a]">
-          <h1 className="font-[Outfit] font-900 text-3xl md:text-4xl text-[#fafafa] mb-2">
+        <div className="mt-16 pt-8 border-t border-[#e5e5e5]">
+          <h1 className="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
             Privacy Policy
           </h1>
-          <p className="text-[#a1a1aa] text-sm mb-10">
+          <p className="text-[#6b7280] text-sm mb-10">
             Last updated: February 19, 2026
           </p>
 
           <SectionList data={sectionsEn} />
         </div>
 
-        <div className="mt-12 pt-6 border-t border-[#27272a] text-[#a1a1aa] text-xs">
-          &copy; 2026 Polovni Automobili Comments
+        <div className="mt-12 pt-6 border-t border-[#e5e5e5] text-[#6b7280] text-xs">
+          &copy; 2026 Polovni Komentari
         </div>
       </div>
     </div>

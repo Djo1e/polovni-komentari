@@ -20,65 +20,51 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen bg-[#0a0a0a] relative overflow-hidden flex flex-col">
-      {/* Background ambient gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(249,115,22,0.08)_0%,_transparent_60%)]" />
+    <div className="h-screen bg-white overflow-hidden flex flex-col">
+      <div className="h-1 bg-[#E5A100]" />
 
-      {/* ===== HERO ===== */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pt-12 pb-6">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Icon + Heading row */}
-          <div className="flex items-center justify-center gap-5 mb-4 animate-fade-up">
-            <div className="icon-glow shrink-0">
-              <img
-                src="/icons/icon128.png"
-                alt="Polovni Automobili Comments"
-                width={72}
-                height={72}
-                className="relative z-10 drop-shadow-2xl"
-              />
-            </div>
-            <h1 className="font-[Outfit] font-900 text-4xl md:text-6xl lg:text-7xl tracking-tight text-[#fafafa]">
-              Polovni Automobili{" "}
-              <span className="bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#ea580c] bg-clip-text text-transparent">
-                Comments
-              </span>
-            </h1>
+      {/* Hero */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
+        <div className="text-center">
+          <div className="mb-5 animate-fade-up">
+            <img src="/icons/icon128.png" alt="" width={56} height={56} className="mx-auto" />
           </div>
 
-          <p className="font-[Outfit] font-500 text-lg md:text-xl text-[#fafafa]/80 mb-2 animate-fade-up-delay-1">
-            Komentari na svakom oglasu na Polovnim
-          </p>
+          <h1 className="font-[Outfit] font-900 text-5xl sm:text-7xl md:text-8xl tracking-tighter leading-[0.9] mb-4 animate-fade-up">
+            <span className="text-[#1a1a1a]">Polovni</span>
+            <br />
+            <span className="text-[#E5A100]">Komentari</span>
+          </h1>
 
-          <p className="text-[#a1a1aa] text-sm md:text-base max-w-xl mx-auto mb-6 animate-fade-up-delay-2">
-            Ostavi mišljenje, odgovori drugima i glasaj za korisne komentare — direktno na stranici oglasa.
+          <p className="font-[Outfit] font-500 text-lg sm:text-xl text-[#6b7280] mb-8 animate-fade-up-delay-1">
+            Komentari na svakom oglasu
           </p>
 
           <a
             href="https://chromewebstore.google.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-glow inline-flex items-center gap-2 bg-gradient-to-r from-[#f59e0b] via-[#f97316] to-[#ea580c] text-white font-[Outfit] font-700 text-base px-6 py-3 rounded-xl animate-fade-up-delay-3"
+            className="btn-cta inline-flex items-center gap-2.5 bg-[#E5A100] text-white font-[Outfit] font-700 text-base sm:text-lg px-7 py-3.5 rounded-lg animate-fade-up-delay-2"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-5 h-5" />
             Preuzmi za Chrome
           </a>
         </div>
       </div>
 
-      {/* ===== FEATURES ===== */}
-      <div className="relative z-10 px-6 pb-6">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
+      {/* Features */}
+      <div className="px-6 pb-5">
+        <div className="max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
           {features.map((feature, i) => (
             <div
               key={feature.title}
-              className={`card-hover bg-[#18181b] rounded-xl p-4 animate-fade-up-delay-${i + 1}`}
+              className={`feature-card bg-[#fafafa] rounded-md p-4 animate-fade-up-delay-${i + 1}`}
             >
-              <feature.icon className="w-5 h-5 text-[#f97316] mb-2" />
-              <h3 className="font-[Outfit] font-700 text-sm text-[#fafafa] mb-1">
+              <feature.icon className="w-5 h-5 text-[#E5A100] mb-2" />
+              <h3 className="font-[Outfit] font-700 text-sm text-[#1a1a1a] mb-1">
                 {feature.title}
               </h3>
-              <p className="text-[#a1a1aa] text-xs leading-relaxed">
+              <p className="text-[#6b7280] text-xs leading-relaxed">
                 {feature.description}
               </p>
             </div>
@@ -86,34 +72,32 @@ export default function App() {
         </div>
       </div>
 
-      {/* ===== HOW IT WORKS + FOOTER ===== */}
-      <div className="relative z-10 px-6 pb-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Steps row */}
-          <div className="flex items-center justify-center gap-2 md:gap-4 mb-5">
+      {/* Steps + Footer */}
+      <div className="px-6 pb-5">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center justify-center gap-3 md:gap-5 mb-4">
             {steps.map((step, i) => (
-              <div key={step.number} className="flex items-center gap-2 md:gap-4">
+              <div key={step.number} className="flex items-center gap-3 md:gap-5">
                 <div className="flex items-center gap-2">
-                  <span className="font-[Outfit] font-900 text-lg bg-gradient-to-b from-[#f97316]/40 to-transparent bg-clip-text text-transparent select-none">
+                  <span className="font-[Outfit] font-900 text-lg text-[#E5A100]">
                     {step.number}
                   </span>
-                  <span className="text-[#fafafa]/70 text-xs md:text-sm font-[Outfit]">
+                  <span className="text-[#1a1a1a] text-xs md:text-sm font-[Outfit] font-500">
                     {step.text}
                   </span>
                 </div>
                 {i < steps.length - 1 && (
-                  <span className="text-[#27272a] text-xs">→</span>
+                  <span className="text-[#d4d4d4] text-sm">→</span>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between text-[#a1a1aa] text-xs">
-            <span>&copy; 2026 Polovni Automobili Comments</span>
+          <div className="flex items-center justify-between text-[#6b7280] text-xs border-t border-[#e5e5e5] pt-4">
+            <span>&copy; 2026 Polovni Komentari</span>
             <div className="flex gap-4">
-              <a href="/privacy" className="hover:text-[#fafafa] transition-colors">Politika privatnosti</a>
-              <a href="#" className="hover:text-[#fafafa] transition-colors">GitHub</a>
+              <a href="/privacy" className="hover:text-[#1a1a1a] transition-colors">Politika privatnosti</a>
+              <a href="#" className="hover:text-[#1a1a1a] transition-colors">GitHub</a>
             </div>
           </div>
         </div>

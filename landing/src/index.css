@@ -2,43 +2,23 @@
 
 @theme {
   --font-display: "Outfit", sans-serif;
-  --color-dark-base: #0a0a0a;
-  --color-dark-layer1: #111111;
-  --color-dark-layer2: #161616;
-  --color-dark-card: #18181b;
-  --color-dark-border: #27272a;
-  --color-orange-glow: #f97316;
-  --color-orange-warm: #fb923c;
-  --color-orange-amber: #f59e0b;
-  --color-text-primary: #fafafa;
-  --color-text-muted: #a1a1aa;
+  --color-accent: #E5A100;
+  --color-accent-hover: #CC9000;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e5e5;
 }
 
-/* Noise grain texture overlay */
 body {
-  background-color: var(--color-dark-base);
-  color: var(--color-text-primary);
-  font-family: system-ui, -apple-system, sans-serif;
-  position: relative;
+  background-color: #ffffff;
+  color: var(--color-text);
+  font-family: "Outfit", system-ui, sans-serif;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 256px 256px;
-}
-
-/* Fade-in animations */
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -46,123 +26,42 @@ body::before {
   }
 }
 
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes glow-pulse {
-  0%, 100% {
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-}
-
 .animate-fade-up {
-  animation: fade-up 0.8s ease-out both;
+  animation: fade-up 0.5s ease-out both;
 }
 
 .animate-fade-up-delay-1 {
-  animation: fade-up 0.8s ease-out 0.15s both;
+  animation: fade-up 0.5s ease-out 0.08s both;
 }
 
 .animate-fade-up-delay-2 {
-  animation: fade-up 0.8s ease-out 0.3s both;
+  animation: fade-up 0.5s ease-out 0.16s both;
 }
 
 .animate-fade-up-delay-3 {
-  animation: fade-up 0.8s ease-out 0.45s both;
+  animation: fade-up 0.5s ease-out 0.24s both;
 }
 
 .animate-fade-up-delay-4 {
-  animation: fade-up 0.8s ease-out 0.6s both;
+  animation: fade-up 0.5s ease-out 0.32s both;
 }
 
-.animate-fade-in {
-  animation: fade-in 1s ease-out both;
+.feature-card {
+  border-left: 3px solid var(--color-accent);
+  transition: all 0.15s ease;
 }
 
-.animate-fade-in-delay {
-  animation: fade-in 1s ease-out 0.3s both;
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 }
 
-/* Hero icon glow */
-.icon-glow {
-  position: relative;
+.btn-cta {
+  transition: all 0.15s ease;
 }
 
-.icon-glow::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 140px;
-  background: radial-gradient(circle, rgba(249, 115, 22, 0.4) 0%, rgba(249, 115, 22, 0.1) 40%, transparent 70%);
-  border-radius: 50%;
-  animation: glow-pulse 3s ease-in-out infinite;
-  z-index: 0;
-}
-
-/* CTA button glow */
-.btn-glow {
-  box-shadow:
-    0 0 20px rgba(249, 115, 22, 0.3),
-    0 0 40px rgba(249, 115, 22, 0.1);
-  transition: all 0.3s ease;
-}
-
-.btn-glow:hover {
-  box-shadow:
-    0 0 30px rgba(249, 115, 22, 0.5),
-    0 0 60px rgba(249, 115, 22, 0.2);
+.btn-cta:hover {
+  background-color: var(--color-accent-hover);
   transform: translateY(-1px);
-}
-
-/* Card hover effects */
-.card-hover {
-  transition: all 0.3s ease;
-  border: 1px solid var(--color-dark-border);
-}
-
-.card-hover:hover {
-  transform: translateY(-4px);
-  border-color: rgba(249, 115, 22, 0.3);
-  box-shadow: 0 8px 32px rgba(249, 115, 22, 0.08);
-}
-
-/* Step connector line */
-.step-connector {
-  position: relative;
-}
-
-.step-connector::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -50%;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(to right, var(--color-dark-border), transparent);
-}
-
-@media (max-width: 767px) {
-  .step-connector::after {
-    display: none;
-  }
-}
-
-/* Section divider gradient */
-.section-divider {
-  background: linear-gradient(to right, transparent, var(--color-dark-border), transparent);
-  height: 1px;
+  box-shadow: 0 4px 12px rgba(229, 161, 0, 0.25);
 }
