@@ -1,4 +1,5 @@
 import { Download, ChevronUp, ChevronDown, User } from "lucide-react";
+import { track } from "@vercel/analytics";
 import PrivacyPolicy from "./PrivacyPolicy";
 
 const steps = [
@@ -136,6 +137,7 @@ export default function App() {
               href={CWS_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => track("add_extension")}
               className="btn-cta inline-flex items-center gap-2.5 bg-[#E5A100] text-white font-[Outfit] font-700 text-base sm:text-lg px-7 py-3.5 rounded-lg"
             >
               <Download className="w-5 h-5" />
