@@ -174,7 +174,7 @@ export default function App() {
           </div>
 
           <div className="flex items-center justify-between text-[#6b7280] text-xs border-t border-[#e5e5e5] pt-4">
-            <span>&copy; 2026 Polovni Komentari</span>
+            <span>&copy; 2026 Polovni Komentari &middot; Nije povezano sa polovniautomobili.com</span>
             <a href="/privacy" className="hover:text-[#1a1a1a] transition-colors">Politika privatnosti</a>
           </div>
         </div>
