@@ -159,7 +159,7 @@ export default function App() {
 
       {/* Steps + Footer */}
       <div className="px-6 pb-5 mt-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-center gap-3 md:gap-5 mb-4">
             {steps.map((step, i) => (
               <div key={step.number} className="flex items-center gap-3 md:gap-5">
@@ -179,7 +179,7 @@ export default function App() {
           </div>
 
           <div className="flex items-center justify-between text-[#6b7280] text-xs border-t border-[#e5e5e5] pt-4">
-            <span>&copy; 2026 Polovni Komentari &middot; Nezavisan projekat, nije povezan sa polovniautomobili.com ili Polovni automobili doo.</span>
+            <span>&copy; 2026 Polovni Komentari &middot; <strong>Nezavisan projekat, nije povezan sa polovniautomobili.com ili Polovni automobili doo.</strong></span>
             <div className="flex gap-3">
               <a href="/terms" className="hover:text-[#1a1a1a] transition-colors">Uslovi korišćenja</a>
               <span className="text-[#d4d4d4]">·</span>
