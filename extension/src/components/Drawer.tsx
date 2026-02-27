@@ -199,10 +199,13 @@ export function Drawer({
           </div>
         )}
 
-        <div className="shrink-0 px-4 py-3 text-center">
+        <div className="shrink-0 px-4 py-3 text-center space-y-1">
           <p className="text-sm text-muted-foreground leading-relaxed">
             Sviđa ti se ekstenzija? Podeli je sa prijateljima
             – što nas je više, komentari su korisniji za sve! 🚗
+          </p>
+          <p className="text-xs text-muted-foreground/60">
+            Nezavisan projekat. Nije povezan sa polovniautomobili.com.
           </p>
         </div>
       </div>
