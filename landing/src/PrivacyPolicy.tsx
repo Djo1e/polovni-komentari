@@ -2,6 +2,11 @@ import { ArrowLeft } from "lucide-react";
 
 const sections = [
   {
+    title: "O ekstenziji",
+    content:
+      "Polovni Komentari je nezavisan projekat i nije povezan sa, podržan od strane, niti odobren od strane polovniautomobili.com ili Polovni automobili doo.",
+  },
+  {
     title: "Šta radi ova ekstenzija",
     content:
       "Polovni Komentari dodaje sekciju za komentare na stranice oglasa na polovniautomobili.com. Korisnici mogu da ostavljaju komentare, odgovaraju drugima i glasaju za komentare.",
@@ -48,9 +53,19 @@ const sections = [
       "Komentari i glasovi su javni i trenutno ih korisnici ne mogu sami obrisati. Kontaktirajte nas ako želite da uklonite komentar.",
     ],
   },
+  {
+    title: "Čuvanje podataka",
+    content:
+      "Komentari i glasovi se čuvaju neograničeno osim ako se ne zatraži brisanje. Osnovni podaci o oglasu (naslov, cena, URL slike) se čuvaju kako bi se prikazali u fidu najnovijih komentara. Ovi podaci su javno dostupni na polovniautomobili.com.",
+  },
 ] as const;
 
 const sectionsEn = [
+  {
+    title: "About this extension",
+    content:
+      "Polovni Komentari is an independent project and is not affiliated with, endorsed by, or approved by polovniautomobili.com or Polovni automobili doo.",
+  },
   {
     title: "What this extension does",
     content:
@@ -96,6 +111,11 @@ const sectionsEn = [
       "To delete your local data, clear your browser's site data for polovniautomobili.com.",
       "Comments and votes are public and cannot currently be deleted by users. Contact us if you need a comment removed.",
     ],
+  },
+  {
+    title: "Data retention",
+    content:
+      "Comments and votes are retained indefinitely unless deletion is requested. Basic listing data (title, price, image URL) is stored to display in the latest comments feed. This data is publicly available on polovniautomobili.com.",
   },
 ] as const;
 
