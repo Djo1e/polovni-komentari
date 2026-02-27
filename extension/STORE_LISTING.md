@@ -1,14 +1,16 @@
 # Chrome Web Store Listing
 
 ## Name
-Polovni Automobili Comments
+Polovni Komentari
 
 ## Short description (132 chars max)
-Dodaj komentare na oglase na polovniautomobili.com. Ostavi mišljenje, odgovori drugima i glasaj za korisne komentare.
+Nezavisni komentari za oglase na polovniautomobili.com. Ostavi mišljenje, odgovori drugima i glasaj za korisne komentare.
 
 ## Detailed description
 
-Polovni Automobili Comments dodaje sekciju za komentare na svaki oglas na polovniautomobili.com.
+Polovni Komentari je nezavisan projekat. Nije povezano sa polovniautomobili.com.
+
+Polovni Komentari dodaje sekciju za komentare na svaki oglas na polovniautomobili.com.
 
 Funkcionalnosti:
 • Ostavi komentar na bilo koji auto oglas
