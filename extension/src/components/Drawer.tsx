@@ -103,7 +103,7 @@ export function Drawer({
           <button
             onClick={toggle}
             disabled={animating}
-            className="rounded-sm opacity-70 hover:opacity-100"
+            className="rounded-sm cursor-pointer opacity-70 hover:opacity-100"
             aria-label="Close"
           >
             <X className="h-4 w-4" />
@@ -198,6 +198,13 @@ export function Drawer({
             )}
           </div>
         )}
+
+        <div className="shrink-0 px-4 py-3 text-center">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Sviđa ti se ekstenzija? Podeli je sa prijateljima
+            – što nas je više, komentari su korisniji za sve! 🚗
+          </p>
+        </div>
       </div>
     </div>
   );
