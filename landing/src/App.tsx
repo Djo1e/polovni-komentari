@@ -1,6 +1,7 @@
 import { Download, ChevronUp, ChevronDown, User } from "lucide-react";
 import { track } from "@vercel/analytics";
 import PrivacyPolicy from "./PrivacyPolicy";
+import TermsOfService from "./TermsOfService";
 
 const steps = [
   { number: "01", text: "Instaliraj ekstenziju" },
@@ -102,6 +103,10 @@ export default function App() {
     return <PrivacyPolicy />;
   }
 
+  if (window.location.pathname === "/terms") {
+    return <TermsOfService />;
+  }
+
   return (
     <div className="min-h-screen lg:h-screen bg-white lg:overflow-hidden flex flex-col">
       <div className="h-1 bg-[#E5A100]" />
@@ -175,7 +180,11 @@ export default function App() {
 
           <div className="flex items-center justify-between text-[#6b7280] text-xs border-t border-[#e5e5e5] pt-4">
             <span>&copy; 2026 Polovni Komentari &middot; Nezavisan projekat, nije povezan sa polovniautomobili.com ili Polovni automobili doo.</span>
-            <a href="/privacy" className="hover:text-[#1a1a1a] transition-colors">Politika privatnosti</a>
+            <div className="flex gap-3">
+              <a href="/terms" className="hover:text-[#1a1a1a] transition-colors">Uslovi korišćenja</a>
+              <span className="text-[#d4d4d4]">·</span>
+              <a href="/privacy" className="hover:text-[#1a1a1a] transition-colors">Politika privatnosti</a>
+            </div>
           </div>
         </div>
       </div>
