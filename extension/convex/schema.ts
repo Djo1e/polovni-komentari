@@ -30,4 +30,14 @@ export default defineSchema({
     imageUrl: v.string(),
     url: v.string(),
   }).index("by_listingId", ["listingId"]),
+
+  reactions: defineTable({
+    targetType: v.union(v.literal("listing"), v.literal("comment")),
+    targetId: v.string(),
+    reactorId: v.string(),
+    emoji: v.string(),
+    category: v.union(v.literal("price"), v.literal("general")),
+  })
+    .index("by_target", ["targetType", "targetId"])
+    .index("by_target_reactor", ["targetType", "targetId", "reactorId"]),
 });
