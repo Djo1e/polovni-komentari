@@ -31,10 +31,6 @@ function CommentApp({ listingId, anonymousId, initialUsername, initialIsAutoGene
     listingId ? { listingId, reactorId: anonymousId } : "skip"
   );
   const latestComments = useQuery(api.comments.getLatestComments);
-  const listingReactions = useQuery(
-    api.reactions.getListingReactions,
-    listingId ? { listingId } : "skip"
-  );
   const voteMutation = useMutation(api.votes.vote);
   const postMutation = useMutation(api.comments.postComment);
   const reactMutation = useMutation(api.reactions.react);
@@ -136,7 +132,6 @@ function CommentApp({ listingId, anonymousId, initialUsername, initialIsAutoGene
       onPost={handlePost}
       onReply={handleReply}
       onReact={handleReact}
-      listingReactions={listingReactions ?? []}
       error={connectionError}
       onRetry={() => setError(null)}
       anonymousId={anonymousId}

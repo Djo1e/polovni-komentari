@@ -2,17 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { Comment, CommentItem } from "./CommentItem";
 import { LatestComment, LatestFeedItem } from "./LatestFeedItem";
 import { PostForm } from "./PostForm";
-import { PriceVote } from "./PriceVote";
-import { ListingReactions } from "./ListingReactions";
 import { X } from "lucide-react";
 
 type Tab = "listing" | "latest";
-
-interface ListingReaction {
-  emoji: string;
-  category: string;
-  reactorId: string;
-}
 
 interface Props {
   listingId: string | null;
@@ -24,7 +16,6 @@ interface Props {
   onPost: (text: string) => Promise<void>;
   onReply: (parentId: string, text: string) => Promise<void>;
   onReact: (targetType: "listing" | "comment", targetId: string, emoji: string, category: "price" | "general") => void;
-  listingReactions: ListingReaction[];
   error: string | null;
   onRetry: () => void;
   anonymousId: string;
@@ -45,7 +36,6 @@ export function Drawer({
   onPost,
   onReply,
   onReact,
-  listingReactions,
   error,
   onRetry,
   anonymousId,
@@ -94,7 +84,6 @@ export function Drawer({
         style={{ transform: "translateX(-100%) translateY(-50%)", boxShadow: "-4px 0 16px rgba(0, 0, 0, 0.12)" }}
         className="absolute cursor-pointer left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80"
         aria-label="Toggle comments"
-
       >
         <span className="text-lg leading-none">💬</span>
         {listingId && commentCount > 0 && (
@@ -110,15 +99,15 @@ export function Drawer({
         style={{ boxShadow: "-4px 0 16px rgba(0, 0, 0, 0.12)" }}
       >
         {/* Header */}
-        <div className="px-4 py-3 border-b border-border shrink-0 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-foreground">Komentari</h2>
+        <div className="px-5 py-3.5 border-b border-border shrink-0 flex items-center justify-between">
+          <h2 className="text-[17px] font-semibold text-foreground tracking-[-0.01em]">Komentari</h2>
           <button
             onClick={toggle}
             disabled={animating}
             className="rounded-sm cursor-pointer opacity-70 hover:opacity-100"
             aria-label="Close"
           >
-            <X className="h-4 w-4" />
+            <X className="h-[18px] w-[18px]" />
           </button>
         </div>
 
@@ -127,7 +116,7 @@ export function Drawer({
           <div className="flex border-b border-border shrink-0">
             <button
               onClick={() => setActiveTab("listing")}
-              className={`flex-1 cursor-pointer text-base py-2 font-medium transition-colors ${
+              className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
                 activeTab === "listing"
                   ? "text-orange-500 border-b-2 border-orange-500"
                   : "text-muted-foreground hover:text-foreground"
@@ -142,7 +131,7 @@ export function Drawer({
             </button>
             <button
               onClick={() => setActiveTab("latest")}
-              className={`flex-1 cursor-pointer text-base py-2 font-medium transition-colors ${
+              className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
                 activeTab === "latest"
                   ? "text-orange-500 border-b-2 border-orange-500"
                   : "text-muted-foreground hover:text-foreground"
@@ -156,18 +145,6 @@ export function Drawer({
         {/* Listing tab content */}
         {activeTab === "listing" && listingId && (
           <>
-            <PriceVote
-              listingId={listingId}
-              reactions={listingReactions}
-              onReact={onReact}
-              anonymousId={anonymousId}
-            />
-            <ListingReactions
-              listingId={listingId}
-              reactions={listingReactions}
-              onReact={onReact}
-              anonymousId={anonymousId}
-            />
             <div className="shrink-0">
               <PostForm
                 onPost={onPost}
@@ -177,19 +154,19 @@ export function Drawer({
               />
             </div>
 
-            <div className="flex-1 overflow-y-auto px-3">
+            <div className="flex-1 overflow-y-auto px-5">
               {error ? (
-                <div className="flex flex-col items-center gap-2 py-8 text-center">
-                  <p className="text-sm text-gray-500">{error}</p>
+                <div className="flex flex-col items-center gap-2 py-10 text-center">
+                  <p className="text-[14px] text-gray-500">{error}</p>
                   <button
                     onClick={onRetry}
-                    className="text-sm text-orange-500 hover:underline"
+                    className="text-[14px] text-orange-500 hover:underline"
                   >
                     Pokreni ponovo
                   </button>
                 </div>
               ) : comments.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-8">
+                <p className="text-[14px] text-gray-400 text-center py-10">
                   Nema komentara još uvek. Napiši prvi!
                 </p>
               ) : (
@@ -211,9 +188,9 @@ export function Drawer({
 
         {/* Latest tab content */}
         {activeTab === "latest" && (
-          <div className="flex-1 overflow-y-auto px-3">
+          <div className="flex-1 overflow-y-auto px-5">
             {latestComments.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-8">
+              <p className="text-[14px] text-gray-400 text-center py-10">
                 Nema komentara još uvek.
               </p>
             ) : (
@@ -224,12 +201,11 @@ export function Drawer({
           </div>
         )}
 
-        <div className="shrink-0 px-4 py-3 text-center space-y-1">
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Sviđa ti se ekstenzija? Podeli je sa prijateljima
-            – što nas je više, komentari su korisniji za sve! 🚗
+        <div className="shrink-0 px-5 py-3 border-t border-border">
+          <p className="text-[12px] text-muted-foreground/70 text-center leading-normal">
+            Sviđa ti se? Podeli sa prijateljima, komentari su korisniji za sve! 🚗
           </p>
-          <p className="text-xs text-muted-foreground/60">
+          <p className="text-[11px] text-muted-foreground/40 text-center mt-1">
             Nezavisan projekat. Nije povezan sa polovniautomobili.com.
           </p>
         </div>
