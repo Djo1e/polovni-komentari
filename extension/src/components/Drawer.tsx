@@ -2,9 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { Comment, CommentItem } from "./CommentItem";
 import { LatestComment, LatestFeedItem } from "./LatestFeedItem";
 import { PostForm } from "./PostForm";
+import { PriceVote } from "./PriceVote";
+import { ListingReactions } from "./ListingReactions";
 import { X } from "lucide-react";
 
 type Tab = "listing" | "latest";
+
+interface ListingReaction {
+  emoji: string;
+  category: string;
+  reactorId: string;
+}
 
 interface Props {
   listingId: string | null;
@@ -15,6 +23,8 @@ interface Props {
   onVote: (commentId: string, direction: "up" | "down") => void;
   onPost: (text: string) => Promise<void>;
   onReply: (parentId: string, text: string) => Promise<void>;
+  onReact: (targetType: "listing" | "comment", targetId: string, emoji: string, category: "price" | "general") => void;
+  listingReactions: ListingReaction[];
   error: string | null;
   onRetry: () => void;
   anonymousId: string;
@@ -34,6 +44,8 @@ export function Drawer({
   onVote,
   onPost,
   onReply,
+  onReact,
+  listingReactions,
   error,
   onRetry,
   anonymousId,
@@ -144,6 +156,18 @@ export function Drawer({
         {/* Listing tab content */}
         {activeTab === "listing" && listingId && (
           <>
+            <PriceVote
+              listingId={listingId}
+              reactions={listingReactions}
+              onReact={onReact}
+              anonymousId={anonymousId}
+            />
+            <ListingReactions
+              listingId={listingId}
+              reactions={listingReactions}
+              onReact={onReact}
+              anonymousId={anonymousId}
+            />
             <div className="shrink-0">
               <PostForm
                 onPost={onPost}
@@ -176,6 +200,7 @@ export function Drawer({
                     currentVotes={currentVotes}
                     onVote={onVote}
                     onReply={onReply}
+                    onReact={onReact}
                     anonymousId={anonymousId}
                   />
                 ))
