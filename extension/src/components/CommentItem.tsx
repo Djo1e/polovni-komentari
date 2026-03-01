@@ -68,7 +68,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousI
                 onClick={() => onVote(comment._id, "up")}
                 aria-label="Upvote"
                 disabled={isOwn}
-                className={`h-7 w-7 ${currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}`}
+                className={`h-7 w-7 cursor-pointer ${currentVote === "up" ? "text-orange-500" : "text-muted-foreground"}`}
               >
                 <ChevronUp className="h-4 w-4" />
               </Button>
@@ -81,7 +81,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, anonymousI
                 onClick={() => onVote(comment._id, "down")}
                 aria-label="Downvote"
                 disabled={isOwn}
-                className={`h-7 w-7 ${currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}`}
+                className={`h-7 w-7 cursor-pointer ${currentVote === "down" ? "text-blue-500" : "text-muted-foreground"}`}
               >
                 <ChevronDown className="h-4 w-4" />
               </Button>
