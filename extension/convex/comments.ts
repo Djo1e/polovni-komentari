@@ -2,8 +2,8 @@ import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 
 export const getComments = query({
-  args: { listingId: v.string() },
-  handler: async (ctx, { listingId }) => {
+  args: { listingId: v.string(), reactorId: v.optional(v.string()) },
+  handler: async (ctx, { listingId, reactorId }) => {
     const comments = await ctx.db
       .query("comments")
       .withIndex("by_listing", (q) => q.eq("listingId", listingId))
@@ -19,7 +19,28 @@ export const getComments = query({
           (acc, v) => acc + (v.direction === "up" ? 1 : -1),
           0
         );
-        return { ...comment, score };
+
+        const commentReactions = await ctx.db
+          .query("reactions")
+          .withIndex("by_target", (q) =>
+            q.eq("targetType", "comment").eq("targetId", comment._id)
+          )
+          .collect();
+
+        const countsMap = new Map<string, number>();
+        for (const r of commentReactions) {
+          countsMap.set(r.emoji, (countsMap.get(r.emoji) ?? 0) + 1);
+        }
+        const reactions = Array.from(countsMap.entries()).map(([emoji, count]) => ({
+          emoji,
+          count,
+        }));
+
+        const myReactions = reactorId
+          ? commentReactions.filter((r) => r.reactorId === reactorId).map((r) => r.emoji)
+          : [];
+
+        return { ...comment, score, reactions, myReactions };
       })
     );
 
