@@ -1,12 +1,12 @@
 # Privacy Policy — Polovni Komentari
 
-**Last updated:** February 27, 2026
+**Last updated:** March 4, 2026
 
 **Polovni Komentari is an independent project and is not affiliated with, endorsed by, or approved by polovniautomobili.com or Polovni automobili doo.**
 
 ## What this extension does
 
-Polovni Komentari adds a community comment section to car listing pages on polovniautomobili.com. Users can post comments, reply to others, and vote on comments.
+Polovni Komentari adds a community comment section to car listing pages on polovniautomobili.com. Users can post comments, reply to others, and vote on comments. The extension also allows users to check vehicle import status via the public VIN lookup provided by Serbia's Agency for Traffic Safety (ABS).
 
 ## Data we collect
 
@@ -14,6 +14,7 @@ Polovni Komentari adds a community comment section to car listing pages on polov
 - **Username** — Either auto-generated (e.g., "Golf123") or chosen by you. Stored in your browser's local storage.
 - **Comments and votes** — Text you post and votes you cast are sent to our server and visible to all users of the extension.
 - **Listing data** — When you comment on a listing, we store the listing's title, price, image URL, and URL to display in the latest comments feed. This is publicly available data from polovniautomobili.com.
+- **VIN check results** — When you use the VIN check feature, the chassis number (VIN) from the listing is sent to abs.gov.rs (a public government service) to check vehicle import status. The result is cached on our server so that subsequent checks for the same VIN load instantly without repeated requests to ABS.
 
 ## Data we do NOT collect
 
@@ -29,11 +30,11 @@ Polovni Komentari adds a community comment section to car listing pages on polov
 
 ## Permissions
 
-This extension requires **no special browser permissions**.
+This extension requests host access to **abs.gov.rs** solely for the VIN check feature. No other special browser permissions are required.
 
 ## Third-party services
 
-We use [Convex](https://convex.dev) to store and serve comments and votes. Convex's privacy policy applies to data stored on their servers.
+We use [Convex](https://convex.dev) to store and serve comments, votes, and cached VIN check results. Convex's privacy policy applies to data stored on their servers. The VIN check feature queries [abs.gov.rs](https://www.abs.gov.rs), a public service of Serbia's Agency for Traffic Safety. This request is only made when the user clicks the check button.
 
 ## Data retention
 

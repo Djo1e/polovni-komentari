@@ -3,6 +3,8 @@ export interface ListingInfo {
   price: string;
   imageUrl: string;
   url: string;
+  vin: string | null;
+  boughtNewInSerbia: boolean;
 }
 
 export function extractListingInfo(): ListingInfo | null {
@@ -19,11 +21,32 @@ export function extractListingInfo(): ListingInfo | null {
 
     if (!title) return null;
 
+    let vin: string | null = null;
+    let boughtNewInSerbia = false;
+
+    const gridDivs = Array.from(document.querySelectorAll(".divider .uk-grid div"));
+    for (const div of gridDivs) {
+      const text = div.textContent?.trim() ?? "";
+      if (text === "Broj šasije:" || text === "Broj šasije") {
+        const sibling = div.nextElementSibling;
+        const value = sibling?.textContent?.trim() ?? "";
+        if (value) vin = value;
+      }
+    }
+
+    const classifiedBody = document.querySelector(".classified-content, .classifiedDetailContent, #classified-content");
+    const bodyText = classifiedBody?.textContent ?? document.body.textContent ?? "";
+    if (bodyText.includes("Kupljen nov u Srbiji")) {
+      boughtNewInSerbia = true;
+    }
+
     return {
       title,
       price,
       imageUrl,
       url: window.location.href,
+      vin,
+      boughtNewInSerbia,
     };
   } catch {
     return null;

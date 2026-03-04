@@ -40,4 +40,12 @@ export default defineSchema({
   })
     .index("by_target", ["targetType", "targetId"])
     .index("by_target_reactor", ["targetType", "targetId", "reactorId"]),
+
+  vinChecks: defineTable({
+    vin: v.string(),
+    found: v.boolean(),
+    statusLines: v.array(v.string()),
+    checkedAt: v.number(),
+  })
+    .index("by_vin", ["vin"]),
 });

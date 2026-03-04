@@ -24,9 +24,11 @@ export const react = mutation({
       return;
     }
 
-    const existingInCategory = userReactions.find((r) => r.category === category);
-    if (existingInCategory) {
-      await ctx.db.delete(existingInCategory._id);
+    if (category === "price") {
+      const existingPrice = userReactions.find((r) => r.category === "price");
+      if (existingPrice) {
+        await ctx.db.delete(existingPrice._id);
+      }
     }
 
     await ctx.db.insert("reactions", {

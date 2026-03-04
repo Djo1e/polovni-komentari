@@ -8,6 +8,13 @@
     "48": "public/icons/icon48.png",
     "128": "public/icons/icon128.png"
   },
+  "host_permissions": [
+    "https://www.abs.gov.rs/*"
+  ],
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.polovniautomobili.com/*"],
