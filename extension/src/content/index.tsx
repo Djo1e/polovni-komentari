@@ -1,5 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "../../convex/_generated/api";
 import { extractListingId } from "../utils/listingId";
 import { extractListingInfo } from "../utils/listingInfo";
 import { getOrCreateAnonymousId } from "../utils/anonymousId";
@@ -7,9 +9,19 @@ import { getOrCreateUsername } from "../utils/username";
 import App from "../components/App";
 import styles from "./shadow.css?inline";
 
+function detectDeletedListing(listingId: string | null, listingInfo: ReturnType<typeof extractListingInfo>) {
+  if (!listingId || listingInfo) return;
+  // We're on a listing URL but can't extract listing info — listing is deleted/removed
+  const convexUrl = import.meta.env.VITE_CONVEX_URL as string;
+  const client = new ConvexHttpClient(convexUrl);
+  client.mutation(api.listings.markListingDeleted, { listingId });
+}
+
 function main() {
   const listingId = extractListingId(window.location.href);
   const listingInfo = listingId ? extractListingInfo() : null;
+
+  detectDeletedListing(listingId, listingInfo);
 
   const anonymousId = getOrCreateAnonymousId();
   const {
