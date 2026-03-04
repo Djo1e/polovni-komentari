@@ -29,6 +29,7 @@ export default defineSchema({
     price: v.string(),
     imageUrl: v.string(),
     url: v.string(),
+    isDeleted: v.optional(v.boolean()),
   }).index("by_listingId", ["listingId"]),
 
   reactions: defineTable({
