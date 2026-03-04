@@ -4,7 +4,7 @@ const sections = [
   {
     title: "O servisu",
     content:
-      "Polovni Komentari je nezavisan projekat koji dodaje komentare na stranice oglasa na polovniautomobili.com. Nije povezan sa, podržan od strane, niti odobren od strane polovniautomobili.com ili Polovni automobili doo.",
+      "Polovni Komentari su nezavisan projekat koji dodaje komentare na stranice oglasa na polovniautomobili.com. Nisu povezani sa, podržani od strane, niti odobreni od strane polovniautomobili.com ili Polovni automobili doo.",
   },
   {
     title: "Korisnički sadržaj",

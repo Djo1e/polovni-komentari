@@ -1,4 +1,4 @@
-import { Download, ChevronUp, ChevronDown, User } from "lucide-react";
+import { Download, ChevronUp, ChevronDown, User, MessageSquare, ThumbsUp, Shield, Eye } from "lucide-react";
 import { track } from "@vercel/analytics";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
@@ -108,11 +108,11 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen lg:h-screen bg-white lg:overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <div className="h-1 bg-[#E5A100]" />
 
       {/* Hero split */}
-      <div className="flex-1 flex items-center justify-center px-6 lg:px-10">
+      <div className="flex items-center justify-center px-6 lg:px-10 py-12 lg:py-20">
         <div className="w-full max-w-7xl flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
           {/* Left: Hero */}
           <div className="text-center lg:text-left animate-fade-up">
@@ -133,9 +133,9 @@ export default function App() {
             </h1>
 
             <p className="font-[Outfit] text-lg sm:text-xl text-[#6b7280] mb-8">
-              Komentari na polovnim automobilima.
+              Iskustva, recenzije i komentari za polovne automobile.
               <br />
-              <span className="font-600 text-[#1a1a1a]">Pročitaj šta drugi misle.</span>
+              <span className="font-600 text-[#1a1a1a]">Pročitaj šta drugi misle pre kupovine.</span>
             </p>
 
             <a
@@ -157,28 +157,152 @@ export default function App() {
         </div>
       </div>
 
-      {/* Steps + Footer */}
-      <div className="px-6 pb-5 mt-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 md:gap-5 mb-4">
-            {steps.map((step, i) => (
-              <div key={step.number} className="flex items-center gap-3 md:gap-5">
-                <div className="flex items-center gap-2">
-                  <span className="font-[Outfit] font-900 text-lg text-[#E5A100]">
-                    {step.number}
-                  </span>
-                  <span className="text-[#1a1a1a] text-xs md:text-sm font-[Outfit] font-500">
-                    {step.text}
-                  </span>
-                </div>
-                {i < steps.length - 1 && (
-                  <span className="text-[#d4d4d4] text-sm">→</span>
-                )}
+      {/* Steps */}
+      <div className="px-6 py-8 bg-[#fafafa] border-y border-[#e5e5e5]">
+        <div className="max-w-5xl mx-auto flex items-center justify-center gap-3 md:gap-5">
+          {steps.map((step, i) => (
+            <div key={step.number} className="flex items-center gap-3 md:gap-5">
+              <div className="flex items-center gap-2">
+                <span className="font-[Outfit] font-900 text-lg text-[#E5A100]">
+                  {step.number}
+                </span>
+                <span className="text-[#1a1a1a] text-xs md:text-sm font-[Outfit] font-500">
+                  {step.text}
+                </span>
               </div>
-            ))}
-          </div>
+              {i < steps.length - 1 && (
+                <span className="text-[#d4d4d4] text-sm">→</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
 
-          <div className="flex items-center justify-between text-[#6b7280] text-xs border-t border-[#e5e5e5] pt-4">
+      {/* Features */}
+      <section className="px-6 py-16 lg:py-20">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="font-[Outfit] font-800 text-3xl sm:text-4xl text-center text-[#1a1a1a] tracking-tight mb-4">
+            Zašto koristiti Polovne Komentare?
+          </h2>
+          <p className="font-[Outfit] text-[#6b7280] text-center max-w-2xl mx-auto mb-12">
+            Kupujete polovni automobil? Pre nego što kontaktirate prodavca, pogledajte iskustva i mišljenja drugih kupaca o oglasu.
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="feature-card bg-white rounded-lg p-6 pl-7">
+              <MessageSquare className="w-6 h-6 text-[#E5A100] mb-3" />
+              <h3 className="font-[Outfit] font-700 text-lg text-[#1a1a1a] mb-2">Komentari na svakom oglasu</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Ostavite komentar, podelite iskustvo ili upozorite druge kupce. Svaki oglas za polovni automobil dobija prostor za diskusiju.
+              </p>
+            </div>
+
+            <div className="feature-card bg-white rounded-lg p-6 pl-7">
+              <Eye className="w-6 h-6 text-[#E5A100] mb-3" />
+              <h3 className="font-[Outfit] font-700 text-lg text-[#1a1a1a] mb-2">Recenzije u realnom vremenu</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Vidite šta drugi misle o ceni, stanju i opisu vozila. Komentari se prikazuju u realnom vremenu čim neko ostavi recenziju.
+              </p>
+            </div>
+
+            <div className="feature-card bg-white rounded-lg p-6 pl-7">
+              <ThumbsUp className="w-6 h-6 text-[#E5A100] mb-3" />
+              <h3 className="font-[Outfit] font-700 text-lg text-[#1a1a1a] mb-2">Glasanje za korisne komentare</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Najkorisnija iskustva i recenzije se ističu zahvaljujući glasovima zajednice. Glasajte za komentare koji vam pomažu.
+              </p>
+            </div>
+
+            <div className="feature-card bg-white rounded-lg p-6 pl-7">
+              <Shield className="w-6 h-6 text-[#E5A100] mb-3" />
+              <h3 className="font-[Outfit] font-700 text-lg text-[#1a1a1a] mb-2">Anonimno i besplatno</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Nije potrebna registracija. Komentarišite slobodno bez brige o privatnosti — ne prikupljamo lične podatke.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="px-6 py-16 lg:py-20 bg-[#fafafa] border-y border-[#e5e5e5]">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="font-[Outfit] font-800 text-3xl sm:text-4xl text-center text-[#1a1a1a] tracking-tight mb-12">
+            Česta pitanja
+          </h2>
+
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-[Outfit] font-700 text-[#1a1a1a] mb-1">Šta su Polovni Komentari?</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Polovni Komentari su besplatna Chrome ekstenzija koja dodaje komentare na oglase za polovne automobile. Pročitajte iskustva i recenzije drugih korisnika pre kupovine.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-[Outfit] font-700 text-[#1a1a1a] mb-1">Kako da koristim komentare na oglasima za polovne automobile?</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Instalirajte ekstenziju, otvorite bilo koji oglas i kliknite na narandžasto dugme sa desne strane ekrana. Odmah možete da čitate komentare i ostavljate svoja iskustva.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-[Outfit] font-700 text-[#1a1a1a] mb-1">Da li je potrebna registracija?</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Ne, komentarisanje je potpuno anonimno. Automatski dobijate nadimak koji možete promeniti. Nije potrebna ni email adresa ni bilo kakva registracija.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-[Outfit] font-700 text-[#1a1a1a] mb-1">Gde mogu da pročitam recenzije oglasa za polovne automobile?</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Instalirajte besplatnu Chrome ekstenziju Polovni Komentari i na svakom oglasu ćete videti komentare, ocene i iskustva drugih korisnika koji su pregledali isti oglas.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-[Outfit] font-700 text-[#1a1a1a] mb-1">Kako mogu da podelim iskustva o polovnim automobilima?</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Pomoću ekstenzije možete da ostavite komentar na bilo koji oglas, glasate za korisne komentare drugih korisnika, i vodite diskusiju o ceni i stanju vozila.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-[Outfit] font-700 text-[#1a1a1a] mb-1">Da li je ova ekstenzija povezana sa sajtom za polovne automobile?</h3>
+              <p className="text-sm text-[#6b7280] leading-relaxed">
+                Ne. Polovni Komentari su potpuno nezavisan projekat. Nisu povezani sa, podržani od strane, niti odobreni od strane bilo kog sajta za oglašavanje vozila.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="px-6 py-16 text-center">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="font-[Outfit] font-800 text-2xl sm:text-3xl text-[#1a1a1a] tracking-tight mb-4">
+            Proveri šta drugi kažu pre kupovine
+          </h2>
+          <p className="font-[Outfit] text-[#6b7280] mb-8">
+            Instalirajte ekstenziju i odmah čitajte komentare, iskustva i recenzije na oglasima za polovne automobile.
+          </p>
+          <a
+            href={CWS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => track("add_extension")}
+            className="btn-cta inline-flex items-center gap-2.5 bg-[#E5A100] text-white font-[Outfit] font-700 text-base sm:text-lg px-7 py-3.5 rounded-lg"
+          >
+            <Download className="w-5 h-5" />
+            Preuzmi za Chrome
+          </a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="px-6 pb-5">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between text-[#6b7280] text-xs border-t border-[#e5e5e5] pt-4 gap-2">
             <span>&copy; 2026 Polovni Komentari &middot; <strong>Nezavisan projekat, nije povezan sa polovniautomobili.com ili Polovni automobili doo.</strong></span>
             <div className="flex gap-3">
               <a href="/terms" className="hover:text-[#1a1a1a] transition-colors">Uslovi korišćenja</a>
@@ -187,7 +311,7 @@ export default function App() {
             </div>
           </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }

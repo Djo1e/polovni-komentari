@@ -4,7 +4,7 @@ const sections = [
   {
     title: "O ekstenziji",
     content:
-      "Polovni Komentari je nezavisan projekat i nije povezan sa, podržan od strane, niti odobren od strane polovniautomobili.com ili Polovni automobili doo.",
+      "Polovni Komentari su nezavisan projekat i nisu povezani sa, podržani od strane, niti odobreni od strane polovniautomobili.com ili Polovni automobili doo.",
   },
   {
     title: "Šta radi ova ekstenzija",
