@@ -28,3 +28,16 @@ export const upsertListing = mutation({
     return ctx.db.insert("listings", args);
   },
 });
+
+export const markListingDeleted = mutation({
+  args: { listingId: v.string() },
+  handler: async (ctx, { listingId }) => {
+    const listing = await ctx.db
+      .query("listings")
+      .withIndex("by_listingId", (q) => q.eq("listingId", listingId))
+      .first();
+    if (listing) {
+      await ctx.db.patch(listing._id, { isDeleted: true });
+    }
+  },
+});
