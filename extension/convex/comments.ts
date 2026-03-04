@@ -155,6 +155,7 @@ export const getLatestComments = query({
                 price: listing.price,
                 imageUrl: listing.imageUrl,
                 url: listing.url,
+                isDeleted: listing.isDeleted ?? false,
               }
             : null,
         };
