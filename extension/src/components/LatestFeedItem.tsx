@@ -107,7 +107,7 @@ export function LatestFeedItem({ comment }: Props) {
                   onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
                   className="text-xs font-medium text-orange-500 hover:text-orange-600 flex items-center gap-0.5 cursor-pointer"
                 >
-                  {expanded ? "Sakrij" : "Pročitaj ceo komentar"}
+                  {expanded ? "Manje" : "Više"}
                   {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                 </button>
               )}
