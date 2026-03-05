@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { ExternalLink, User } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, User } from "lucide-react";
 
 interface LatestReply {
   _id: string;
@@ -68,8 +68,7 @@ export function LatestFeedItem({ comment }: Props) {
   return (
     <div className="py-1.5 border-b border-gray-100 last:border-0">
       <div
-        onClick={isTruncated || expanded ? () => setExpanded(!expanded) : undefined}
-        className={`flex items-start gap-2 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors ${isTruncated || expanded ? "cursor-pointer" : ""}`}
+        className="flex items-start gap-2 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
       >
         {comment.listing.imageUrl && (
           <img
@@ -100,8 +99,19 @@ export function LatestFeedItem({ comment }: Props) {
             {" "}
             {comment.text}
           </p>
-          <div className="flex items-center gap-2 mt-0.5">
-            <p className="text-xs text-gray-400">{timeAgo}</p>
+          <div className="flex items-center justify-between mt-0.5">
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-gray-400">{timeAgo}</p>
+              {(isTruncated || expanded) && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+                  className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-0.5 cursor-pointer"
+                >
+                  {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                  {expanded ? "Sakrij" : "Proširi"}
+                </button>
+              )}
+            </div>
             <a
               href={comment.listing.url}
               target="_top"
