@@ -131,7 +131,6 @@ export const getLatestComments = query({
       .query("comments")
       .withIndex("by_createdAt")
       .order("desc")
-      .filter((q) => q.eq(q.field("parentId"), undefined))
       .take(50);
 
     const withListings = await Promise.all(
@@ -143,10 +142,12 @@ export const getLatestComments = query({
           )
           .first();
 
-        const replies = await ctx.db
-          .query("comments")
-          .withIndex("by_parent", (q) => q.eq("parentId", comment._id))
-          .collect();
+        const replies = comment.parentId
+          ? []
+          : await ctx.db
+              .query("comments")
+              .withIndex("by_parent", (q) => q.eq("parentId", comment._id))
+              .collect();
 
         return {
           _id: comment._id,
