@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, User } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useShadowPortal } from "../context/shadow-portal";
@@ -29,6 +29,14 @@ interface Props {
 export function DeletedListingModal({ listing, comments }: Props) {
   const [dismissed, setDismissed] = useState(false);
   const portalTarget = useShadowPortal();
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDismissed(true);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   if (dismissed) return null;
 
