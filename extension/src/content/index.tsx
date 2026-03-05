@@ -17,9 +17,25 @@ function detectDeletedListing(listingId: string | null, listingInfo: ReturnType<
   client.mutation(api.listings.markListingDeleted, { listingId });
 }
 
+function checkRedirectForDeletedListing(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has("redirect_message")) return null;
+  const storedId = localStorage.getItem("paLastVisitedListingId");
+  if (!storedId) return null;
+  localStorage.removeItem("paLastVisitedListingId");
+  const convexUrl = import.meta.env.VITE_CONVEX_URL as string;
+  const client = new ConvexHttpClient(convexUrl);
+  client.mutation(api.listings.markListingDeleted, { listingId: storedId });
+  return storedId;
+}
+
 function main() {
-  const listingId = extractListingId(window.location.href);
+  let listingId = extractListingId(window.location.href);
   const listingInfo = listingId ? extractListingInfo() : null;
+
+  if (!listingId) {
+    listingId = checkRedirectForDeletedListing();
+  }
 
   detectDeletedListing(listingId, listingInfo);
 

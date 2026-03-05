@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, ExternalLink, User } from "lucide-react";
+import { extractListingId } from "../utils/listingId";
 
 interface LatestReply {
   _id: string;
@@ -115,7 +116,11 @@ export function LatestFeedItem({ comment }: Props) {
             <a
               href={comment.listing.url}
               target="_top"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                const id = extractListingId(comment.listing!.url);
+                if (id) localStorage.setItem("paLastVisitedListingId", id);
+              }}
               className="text-xs text-orange-500 hover:text-orange-600 flex items-center gap-0.5 no-underline"
             >
               Poseti oglas
