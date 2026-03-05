@@ -114,7 +114,7 @@ export function Drawer({
       >
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-border shrink-0 flex items-center justify-between">
-          <h2 className="text-[17px] font-semibold text-foreground tracking-[-0.01em]">Komentari</h2>
+          <h2 className="text-[17px] font-semibold text-foreground tracking-[-0.01em]">{listingId ? "Komentari" : "Poslednji komentari"}</h2>
           <button
             onClick={toggle}
             disabled={animating}
