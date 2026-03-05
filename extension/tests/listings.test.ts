@@ -35,3 +35,27 @@ test("markListingDeleted is a no-op for unknown listing", async () => {
     listingId: "99999",
   });
 });
+
+test("getListing returns listing by listingId", async () => {
+  const t = convexTest(schema);
+
+  await t.mutation(api.listings.upsertListing, {
+    listingId: "12345",
+    title: "Opel Astra",
+    price: "1.899 EUR",
+    imageUrl: "https://example.com/img.jpg",
+    url: "https://www.polovniautomobili.com/auto-oglasi/12345/opel-astra",
+  });
+
+  const listing = await t.query(api.listings.getListing, { listingId: "12345" });
+  expect(listing).not.toBeNull();
+  expect(listing!.title).toBe("Opel Astra");
+  expect(listing!.price).toBe("1.899 EUR");
+  expect(listing!.isDeleted).toBe(false);
+});
+
+test("getListing returns null for unknown listing", async () => {
+  const t = convexTest(schema);
+  const listing = await t.query(api.listings.getListing, { listingId: "99999" });
+  expect(listing).toBeNull();
+});

@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const upsertListing = mutation({
   args: {
@@ -26,6 +26,24 @@ export const upsertListing = mutation({
     }
 
     return ctx.db.insert("listings", args);
+  },
+});
+
+export const getListing = query({
+  args: { listingId: v.string() },
+  handler: async (ctx, { listingId }) => {
+    const listing = await ctx.db
+      .query("listings")
+      .withIndex("by_listingId", (q) => q.eq("listingId", listingId))
+      .first();
+    if (!listing) return null;
+    return {
+      title: listing.title,
+      price: listing.price,
+      imageUrl: listing.imageUrl,
+      url: listing.url,
+      isDeleted: listing.isDeleted ?? false,
+    };
   },
 });
 
