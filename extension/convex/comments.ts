@@ -124,6 +124,21 @@ export const seedComment = mutation({
   },
 });
 
+export const findListingsWithoutComments = query({
+  args: { listingIds: v.array(v.string()) },
+  handler: async (ctx, { listingIds }) => {
+    const result: string[] = [];
+    for (const listingId of listingIds) {
+      const comment = await ctx.db
+        .query("comments")
+        .withIndex("by_listing", (q) => q.eq("listingId", listingId))
+        .first();
+      if (!comment) result.push(listingId);
+    }
+    return result;
+  },
+});
+
 export const getLatestComments = query({
   args: {},
   handler: async (ctx) => {
