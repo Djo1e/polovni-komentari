@@ -4,6 +4,7 @@ import { Id } from "../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CommentReactions } from "./CommentReactions";
+import { trackEvent } from "../utils/tracking";
 
 export interface Comment {
   _id: Id<"comments">;
@@ -96,7 +97,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, onReact, a
             <p className="text-[12px] text-gray-400 leading-7">{timeAgo}</p>
             {!isReply && (
               <button
-                onClick={() => setShowReplyForm(!showReplyForm)}
+                onClick={() => { setShowReplyForm(!showReplyForm); if (!showReplyForm) trackEvent("reply_form_open"); }}
                 className="flex items-center gap-1 text-[12px] text-gray-400 hover:text-gray-600 cursor-pointer"
               >
                 <MessageSquare className="h-[13px] w-[13px]" />

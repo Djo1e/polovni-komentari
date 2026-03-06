@@ -8,8 +8,10 @@
     "48": "public/icons/icon48.png",
     "128": "public/icons/icon128.png"
   },
+  "permissions": ["storage"],
   "host_permissions": [
-    "https://www.abs.gov.rs/*"
+    "https://www.abs.gov.rs/*",
+    "https://www.google-analytics.com/*"
   ],
   "background": {
     "service_worker": "src/background/index.ts",

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Shield, Loader2, AlertTriangle, CheckCircle, Clock, RotateCcw } from "lucide-react";
+import { trackEvent } from "../utils/tracking";
 
 interface Props {
   vin: string;
@@ -63,6 +64,7 @@ export function VinCheck({ vin, boughtNewInSerbia }: Props) {
   const result = cached ?? localResult;
 
   async function handleCheck() {
+    trackEvent("vin_check");
     setLoading(true);
     setError(null);
     try {

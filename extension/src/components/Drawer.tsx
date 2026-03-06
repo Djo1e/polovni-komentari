@@ -4,6 +4,7 @@ import { LatestComment, LatestFeedItem } from "./LatestFeedItem";
 import { PostForm } from "./PostForm";
 import { VinCheck } from "./VinCheck";
 import { X } from "lucide-react";
+import { trackEvent } from "../utils/tracking";
 
 type Tab = "listing" | "latest";
 
@@ -68,6 +69,7 @@ export function Drawer({
   function dismissWhatsNew() {
     setShowWhatsNew(false);
     localStorage.setItem(WHATS_NEW_KEY, "1");
+    trackEvent("whatsnew_dismiss");
   }
 
   function toggle() {
@@ -76,6 +78,7 @@ export function Drawer({
     setAnimating(true);
     setOpen(next);
     localStorage.setItem(DRAWER_STATE_KEY, String(next));
+    trackEvent(next ? "drawer_open" : "drawer_close");
   }
 
   return (
@@ -133,7 +136,7 @@ export function Drawer({
         {listingId && (
           <div className="flex border-b border-border shrink-0">
             <button
-              onClick={() => setActiveTab("listing")}
+              onClick={() => { setActiveTab("listing"); trackEvent("tab_switch", { tab: "listing" }); }}
               className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
                 activeTab === "listing"
                   ? "text-orange-500 border-b-2 border-orange-500"
@@ -148,7 +151,7 @@ export function Drawer({
               )}
             </button>
             <button
-              onClick={() => setActiveTab("latest")}
+              onClick={() => { setActiveTab("latest"); trackEvent("tab_switch", { tab: "latest" }); }}
               className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
                 activeTab === "latest"
                   ? "text-orange-500 border-b-2 border-orange-500"
@@ -217,7 +220,7 @@ export function Drawer({
                 <div className="flex flex-col items-center gap-2 py-10 text-center">
                   <p className="text-[14px] text-gray-500">{error}</p>
                   <button
-                    onClick={onRetry}
+                    onClick={() => { onRetry(); trackEvent("connection_retry"); }}
                     className="text-[14px] text-orange-500 hover:underline"
                   >
                     Pokreni ponovo

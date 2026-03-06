@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, ExternalLink, User } from "lucide-react";
 import { extractListingId } from "../utils/listingId";
+import { trackEvent } from "../utils/tracking";
 
 interface LatestReply {
   _id: string;
@@ -105,7 +106,7 @@ export function LatestFeedItem({ comment }: Props) {
               <p className="text-xs text-gray-400">{timeAgo}</p>
               {(isTruncated || expanded) && (
                 <button
-                  onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+                  onClick={(e) => { e.stopPropagation(); if (!expanded) trackEvent("feed_item_expand"); setExpanded(!expanded); }}
                   className="text-xs font-medium text-orange-500 hover:text-orange-600 flex items-center gap-0.5 cursor-pointer"
                 >
                   {expanded ? "Manje" : "Više"}
@@ -118,6 +119,7 @@ export function LatestFeedItem({ comment }: Props) {
               target="_top"
               onClick={(e) => {
                 e.stopPropagation();
+                trackEvent("feed_item_visit_listing");
                 const id = extractListingId(comment.listing!.url);
                 if (id) localStorage.setItem("paLastVisitedListingId", id);
               }}
