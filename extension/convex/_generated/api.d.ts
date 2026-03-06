@@ -9,6 +9,8 @@
  */
 
 import type * as comments from "../comments.js";
+import type * as crons from "../crons.js";
+import type * as engagementQuestions from "../engagementQuestions.js";
 import type * as listings from "../listings.js";
 import type * as reactions from "../reactions.js";
 import type * as vinChecks from "../vinChecks.js";
@@ -22,6 +24,8 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   comments: typeof comments;
+  crons: typeof crons;
+  engagementQuestions: typeof engagementQuestions;
   listings: typeof listings;
   reactions: typeof reactions;
   vinChecks: typeof vinChecks;
