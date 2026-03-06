@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
 
 export const getComments = query({
   args: { listingId: v.string(), reactorId: v.optional(v.string()) },
@@ -44,25 +45,52 @@ export const getComments = query({
       })
     );
 
+    // Build lookup map for walking parent chains
+    const byId = new Map(withScores.map((c) => [c._id, c]));
+
+    // Find root ancestor by walking up parentId chain
+    function findRoot(commentId: Id<"comments">): Id<"comments"> {
+      let current = commentId;
+      for (let i = 0; i < 100; i++) {
+        const c = byId.get(current);
+        if (!c || !c.parentId) return current;
+        current = c.parentId;
+      }
+      return current;
+    }
+
     const topLevel = withScores
       .filter((c) => !c.parentId)
       .sort((a, b) => b.score - a.score);
 
-    const repliesByParent = new Map<string, typeof withScores>();
+    // Group all non-root comments under their root ancestor
+    const repliesByRoot = new Map<Id<"comments">, typeof withScores>();
     for (const c of withScores) {
       if (c.parentId) {
-        const key = c.parentId;
-        if (!repliesByParent.has(key)) repliesByParent.set(key, []);
-        repliesByParent.get(key)!.push(c);
+        const rootId = findRoot(c._id);
+        if (!repliesByRoot.has(rootId)) repliesByRoot.set(rootId, []);
+        repliesByRoot.get(rootId)!.push(c);
       }
     }
-    for (const replies of repliesByParent.values()) {
-      replies.sort((a, b) => b.score - a.score);
+    // Sort replies chronologically
+    for (const replies of repliesByRoot.values()) {
+      replies.sort((a, b) => a.createdAt - b.createdAt);
     }
 
     return topLevel.map((c) => ({
       ...c,
-      replies: repliesByParent.get(c._id) ?? [],
+      replies: (repliesByRoot.get(c._id) ?? []).map((r) => {
+        // Add replyingTo when direct parent is not the root
+        const directParent = r.parentId ? byId.get(r.parentId) : undefined;
+        const isDirectChildOfRoot = r.parentId === c._id;
+        return {
+          ...r,
+          replyingTo:
+            !isDirectChildOfRoot && directParent
+              ? { username: directParent.username, commentId: directParent._id }
+              : undefined,
+        };
+      }),
     }));
   },
 });
