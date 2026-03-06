@@ -105,7 +105,7 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, onReact, a
                 setShowReplyForm(!showReplyForm);
                 if (!showReplyForm) {
                   trackEvent("reply_form_open");
-                  setReplyText(comment.parentId ? `@${comment.username} ` : "");
+                  setReplyText("");
                 }
               }}
               className="flex items-center gap-1 text-[12px] text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -124,16 +124,34 @@ export function CommentItem({ comment, currentVotes, onVote, onReply, onReact, a
           {/* Inline reply form */}
           {showReplyForm && (
             <form onSubmit={handleReplySubmit} className="mt-2">
-              <Textarea
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                placeholder="Napiši odgovor..."
-                maxLength={1000}
-                rows={2}
-                className="resize-none text-sm"
-                disabled={posting}
-                autoFocus
-              />
+              {comment.parentId ? (
+                <div className="mention-wrapper flex items-start rounded-md">
+                  <span className="shrink-0 select-none text-sm font-semibold text-orange-500 pl-3 pt-2">
+                    @{comment.username}
+                  </span>
+                  <Textarea
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Napiši odgovor..."
+                    maxLength={1000}
+                    rows={2}
+                    className="resize-none text-sm !border-0 !shadow-none"
+                    disabled={posting}
+                    autoFocus
+                  />
+                </div>
+              ) : (
+                <Textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="Napiši odgovor..."
+                  maxLength={1000}
+                  rows={2}
+                  className="resize-none text-sm"
+                  disabled={posting}
+                  autoFocus
+                />
+              )}
               <div className="flex justify-end gap-2 mt-1.5">
                 <Button
                   type="button"
