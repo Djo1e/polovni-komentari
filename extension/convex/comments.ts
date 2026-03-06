@@ -86,7 +86,6 @@ export const postComment = mutation({
       if (!parent) throw new Error("Parent comment not found");
       if (parent.listingId !== listingId)
         throw new Error("Parent belongs to different listing");
-      if (parent.parentId) throw new Error("Cannot reply to a reply");
     }
 
     return ctx.db.insert("comments", {
