@@ -8,24 +8,28 @@ export const upsertListing = mutation({
     price: v.string(),
     imageUrl: v.string(),
     url: v.string(),
+    // Accept but ignore fields sent by older extension versions
+    vin: v.optional(v.any()),
+    boughtNewInSerbia: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
+    const { vin: _vin, boughtNewInSerbia: _bns, ...listingData } = args;
     const existing = await ctx.db
       .query("listings")
-      .withIndex("by_listingId", (q) => q.eq("listingId", args.listingId))
+      .withIndex("by_listingId", (q) => q.eq("listingId", listingData.listingId))
       .first();
 
     if (existing) {
       await ctx.db.patch(existing._id, {
-        title: args.title,
-        price: args.price,
-        imageUrl: args.imageUrl,
-        url: args.url,
+        title: listingData.title,
+        price: listingData.price,
+        imageUrl: listingData.imageUrl,
+        url: listingData.url,
       });
       return existing._id;
     }
 
-    return ctx.db.insert("listings", args);
+    return ctx.db.insert("listings", listingData);
   },
 });
 
