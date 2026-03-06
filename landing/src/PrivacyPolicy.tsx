@@ -18,6 +18,7 @@ const sections = [
       "Nadimak — automatski generisan (npr. \"Golf123\") ili po vašem izboru. Čuva se u lokalnoj memoriji pregledača.",
       "Komentari i glasovi — tekst koji postavljate i glasovi koje dajete se šalju na naš server i vidljivi su svim korisnicima ekstenzije.",
       "Rezultati provere VIN broja — kada koristite opciju provere broja šasije, VIN se šalje na abs.gov.rs (javni servis Agencije za bezbednost saobraćaja). Rezultat se čuva na našem serveru kako bi naredne provere istog VIN-a bile trenutne.",
+      "Anonimna analitika korišćenja — prikupljamo anonimne podatke o tome kako koristite ekstenziju (npr. otvaranje panela, postavljanje komentara, glasanje) putem Google Analytics-a. Ovi podaci ne sadrže lične informacije i koriste se isključivo za unapređenje ekstenzije.",
     ],
   },
   {
@@ -27,7 +28,6 @@ const sections = [
       "Istoriju pretraživanja",
       "Sadržaj stranica sa polovniautomobili.com",
       "Kolačiće ili piksele za praćenje",
-      "Analitiku ili telemetriju",
     ],
   },
   {
@@ -40,12 +40,12 @@ const sections = [
   {
     title: "Dozvole",
     content:
-      "Ova ekstenzija zahteva pristup sajtu abs.gov.rs isključivo za funkciju provere broja šasije. Nisu potrebne druge posebne dozvole pregledača.",
+      "Ova ekstenzija zahteva pristup sajtu abs.gov.rs za funkciju provere broja šasije, pristup sajtu google-analytics.com za slanje anonimne analitike, i dozvolu za skladištenje podataka (storage) za čuvanje ID-a sesije analitike.",
   },
   {
     title: "Servisi trećih strana",
     content:
-      "Koristimo Convex (convex.dev) za čuvanje i prikazivanje komentara, glasova i keširanih rezultata provere VIN-a. Politika privatnosti Convex-a se odnosi na podatke koji se čuvaju na njihovim serverima. Funkcija provere VIN-a koristi abs.gov.rs, javni servis Agencije za bezbednost saobraćaja. Zahtev se šalje samo kada korisnik klikne na dugme za proveru.",
+      "Koristimo Convex (convex.dev) za čuvanje i prikazivanje komentara, glasova i keširanih rezultata provere VIN-a. Politika privatnosti Convex-a se odnosi na podatke koji se čuvaju na njihovim serverima. Funkcija provere VIN-a koristi abs.gov.rs, javni servis Agencije za bezbednost saobraćaja. Zahtev se šalje samo kada korisnik klikne na dugme za proveru. Koristimo Google Analytics 4 za prikupljanje anonimne statistike korišćenja. Politika privatnosti Google-a se odnosi na te podatke.",
   },
   {
     title: "Brisanje podataka",
@@ -79,6 +79,7 @@ const sectionsEn = [
       "Username — either auto-generated (e.g. \"Golf123\") or chosen by you. Stored in your browser's local storage.",
       "Comments and votes — text you post and votes you cast are sent to our server and visible to all users of the extension.",
       "VIN check results — when you use the VIN check feature, the chassis number (VIN) from the listing is sent to abs.gov.rs (a public government service) to check vehicle import status. The result is cached on our server so that subsequent checks for the same VIN load instantly.",
+      "Anonymous usage analytics — we collect anonymous data about how you use the extension (e.g. opening the panel, posting comments, voting) via Google Analytics. This data contains no personal information and is used solely to improve the extension.",
     ],
   },
   {
@@ -88,7 +89,6 @@ const sectionsEn = [
       "No browsing history",
       "No page content from polovniautomobili.com",
       "No cookies or tracking pixels",
-      "No analytics or telemetry",
     ],
   },
   {
@@ -100,12 +100,12 @@ const sectionsEn = [
   },
   {
     title: "Permissions",
-    content: "This extension requests host access to abs.gov.rs solely for the VIN check feature. No other special browser permissions are required.",
+    content: "This extension requests host access to abs.gov.rs for the VIN check feature, access to google-analytics.com for sending anonymous analytics, and the storage permission for persisting analytics session IDs.",
   },
   {
     title: "Third-party services",
     content:
-      "We use Convex (convex.dev) to store and serve comments, votes, and cached VIN check results. Convex's privacy policy applies to data stored on their servers. The VIN check feature queries abs.gov.rs, a public service of Serbia's Agency for Traffic Safety. This request is only made when the user clicks the check button.",
+      "We use Convex (convex.dev) to store and serve comments, votes, and cached VIN check results. Convex's privacy policy applies to data stored on their servers. The VIN check feature queries abs.gov.rs, a public service of Serbia's Agency for Traffic Safety. This request is only made when the user clicks the check button. We use Google Analytics 4 to collect anonymous usage statistics. Google's privacy policy applies to that data.",
   },
   {
     title: "Data deletion",
@@ -171,7 +171,7 @@ export default function PrivacyPolicy() {
           Politika privatnosti
         </h1>
         <p className="text-[#6b7280] text-sm mb-10">
-          Poslednje ažuriranje: 4. mart 2026.
+          Poslednje ažuriranje: 6. mart 2026.
         </p>
 
         <SectionList data={sections} />
@@ -181,7 +181,7 @@ export default function PrivacyPolicy() {
             Privacy Policy
           </h1>
           <p className="text-[#6b7280] text-sm mb-10">
-            Last updated: March 4, 2026
+            Last updated: March 6, 2026
           </p>
 
           <SectionList data={sectionsEn} />
