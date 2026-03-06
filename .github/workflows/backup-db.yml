@@ -1,0 +1,33 @@
+name: Daily DB Backup
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # 3 AM UTC daily
+  workflow_dispatch: # allow manual trigger
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: extension
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Export production database
+        run: npx convex export --prod --path ../backup.zip
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: convex-backup-${{ github.run_id }}
+          path: backup.zip
+          retention-days: 30
