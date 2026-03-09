@@ -5,10 +5,12 @@ interface Props {
   title: string;
   description: string;
   path: string;
+  ogTitle?: string;
+  ogDescription?: string;
   extraHead?: string;
 }
 
-const { title, description, path, extraHead } = Astro.props;
+const { title, description, path, ogTitle, ogDescription, extraHead } = Astro.props;
 const canonical = `https://polovnikomentari.com${path}`;
 ---
 
@@ -25,16 +27,16 @@ const canonical = `https://polovnikomentari.com${path}`;
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={ogTitle ?? title} />
+    <meta property="og:description" content={ogDescription ?? description} />
     <meta property="og:image" content="https://polovnikomentari.com/og-image.png" />
     <meta property="og:locale" content="sr_RS" />
     <meta property="og:site_name" content="Polovni Komentari" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={ogTitle ?? title} />
+    <meta name="twitter:description" content={ogDescription ?? description} />
     <meta name="twitter:image" content="https://polovnikomentari.com/og-image.png" />
 
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
