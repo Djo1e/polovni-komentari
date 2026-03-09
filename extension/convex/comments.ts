@@ -42,7 +42,7 @@ export const getComments = query({
           ? commentReactions.filter((r) => r.reactorId === reactorId).map((r) => r.emoji)
           : [];
 
-        return { ...comment, score, reactions, myReactions };
+        return { ...comment, score, reactions, myReactions, isVerified: !!comment.userId };
       })
     );
 
