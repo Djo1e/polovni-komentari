@@ -60,4 +60,23 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg.type === "GA_EVENT") {
     sendGAEvent(msg.name, msg.properties ?? {});
   }
+
+  if (msg.type === "GOOGLE_AUTH") {
+    chrome.identity.getAuthToken({ interactive: true })
+      .then((result) => sendResponse({ ok: true, token: result.token }))
+      .catch((err) => sendResponse({ ok: false, error: err.message }));
+    return true;
+  }
+
+  if (msg.type === "GOOGLE_AUTH_REVOKE") {
+    chrome.identity.getAuthToken({ interactive: false })
+      .then((result) => {
+        if (result.token) {
+          return chrome.identity.removeCachedAuthToken({ token: result.token });
+        }
+      })
+      .then(() => sendResponse({ ok: true }))
+      .catch(() => sendResponse({ ok: true }));
+    return true;
+  }
 });
