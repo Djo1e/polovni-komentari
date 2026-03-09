@@ -1,0 +1,38 @@
+---
+interface Section {
+  title: string;
+  content?: string;
+  items?: readonly string[];
+}
+
+interface Props {
+  data: readonly Section[];
+}
+
+const { data } = Astro.props;
+---
+
+<div class="space-y-8">
+  {data.map((section) => (
+    <div>
+      <h2 class="font-[Outfit] font-700 text-lg text-[#1a1a1a] mb-2">
+        {section.title}
+      </h2>
+      {section.content && (
+        <p class="text-[#6b7280] text-sm leading-relaxed">
+          {section.content}
+        </p>
+      )}
+      {section.items && (
+        <ul class="space-y-1.5">
+          {section.items.map((item) => (
+            <li class="text-[#6b7280] text-sm leading-relaxed flex gap-2">
+              <span class="text-[#E5A100] shrink-0">•</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  ))}
+</div>
