@@ -3,10 +3,10 @@ import { Comment, CommentItem } from "./CommentItem";
 import { LatestComment, LatestFeedItem } from "./LatestFeedItem";
 import { PostForm } from "./PostForm";
 import { VinCheck } from "./VinCheck";
-import { X } from "lucide-react";
+import { X, Bell, Settings, LogOut } from "lucide-react";
 import { trackEvent } from "../utils/tracking";
 
-type Tab = "listing" | "latest";
+type Tab = "listing" | "latest" | "notifications";
 
 interface Props {
   listingId: string | null;
@@ -82,6 +82,8 @@ export function Drawer({
   const [showWhatsNew, setShowWhatsNew] = useState(
     () => !localStorage.getItem(WHATS_NEW_KEY)
   );
+  const [showSettings, setShowSettings] = useState(false);
+  const [editingName, setEditingName] = useState("");
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -123,7 +125,7 @@ export function Drawer({
         onClick={toggle}
         disabled={animating}
         style={{ transform: "translateX(-100%) translateY(-50%)", boxShadow: "-4px 0 16px rgba(0, 0, 0, 0.12)" }}
-        className="absolute cursor-pointer left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80"
+        className="absolute cursor-pointer left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80 relative"
         aria-label="Toggle comments"
       >
         <span className="text-lg leading-none">💬</span>
@@ -131,6 +133,9 @@ export function Drawer({
           <span className="text-[20px] font-bold leading-none">
             {commentCount > 99 ? "99+" : commentCount}
           </span>
+        )}
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-600 rounded-full h-3 w-3 border-2 border-orange-500" />
         )}
       </button>
 
@@ -155,23 +160,25 @@ export function Drawer({
         </div>
 
         {/* Tabs */}
-        {listingId && (
+        {(listingId || auth.user) && (
           <div className="flex border-b border-border shrink-0">
-            <button
-              onClick={() => { setActiveTab("listing"); trackEvent("tab_switch", { tab: "listing" }); }}
-              className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
-                activeTab === "listing"
-                  ? "text-orange-500 border-b-2 border-orange-500"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Ovaj oglas
-              {commentCount > 0 && (
-                <span className="ml-1 text-muted-foreground font-normal">
-                  ({commentCount})
-                </span>
-              )}
-            </button>
+            {listingId && (
+              <button
+                onClick={() => { setActiveTab("listing"); trackEvent("tab_switch", { tab: "listing" }); }}
+                className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
+                  activeTab === "listing"
+                    ? "text-orange-500 border-b-2 border-orange-500"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Ovaj oglas
+                {commentCount > 0 && (
+                  <span className="ml-1 text-muted-foreground font-normal">
+                    ({commentCount})
+                  </span>
+                )}
+              </button>
+            )}
             <button
               onClick={() => { setActiveTab("latest"); trackEvent("tab_switch", { tab: "latest" }); }}
               className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
@@ -182,6 +189,23 @@ export function Drawer({
             >
               Najnoviji
             </button>
+            {auth.user && (
+              <button
+                onClick={() => { setActiveTab("notifications"); trackEvent("tab_switch", { tab: "notifications" }); }}
+                className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors relative ${
+                  activeTab === "notifications"
+                    ? "text-orange-500 border-b-2 border-orange-500"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Bell className="h-4 w-4 inline" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1 ml-0.5 bg-red-500 text-white text-[9px] rounded-full h-3.5 min-w-3.5 flex items-center justify-center px-1 leading-none">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
         )}
 
@@ -196,6 +220,99 @@ export function Drawer({
               aria-label="Dismiss"
             >
               <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Sign-in prompt (when not signed in) */}
+        {!auth.user && !showWhatsNew && (
+          <div className="px-5 py-2.5 border-b border-border shrink-0">
+            <button
+              onClick={auth.signIn}
+              disabled={auth.signingIn}
+              className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-md text-[13px] text-gray-500 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer border border-gray-200"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              {auth.signingIn ? "Prijavljivanje..." : "Prijavi se za obaveštenja o odgovorima"}
+            </button>
+          </div>
+        )}
+
+        {/* Signed-in user bar */}
+        {auth.user && (
+          <div className="px-5 py-2 border-b border-border shrink-0 flex items-center justify-between">
+            <span className="text-[13px] text-gray-600">
+              {auth.user.displayName}
+              <span className="ml-1 text-[10px] text-green-600">✓</span>
+            </span>
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="text-gray-400 hover:text-gray-600 cursor-pointer"
+              aria-label="Podešavanja"
+            >
+              <Settings className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Settings panel */}
+        {showSettings && auth.user && (
+          <div className="px-5 py-3 border-b border-border shrink-0 bg-gray-50 space-y-3">
+            <div>
+              <label className="text-[12px] font-medium text-muted-foreground mb-1 block">Ime za prikaz</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={editingName}
+                  onChange={(e) => setEditingName(e.target.value)}
+                  placeholder={auth.user.displayName}
+                  maxLength={30}
+                  className="flex-1 text-sm px-3 py-1.5 rounded-md bg-white text-gray-700 placeholder:text-gray-300"
+                  style={{ border: "1px solid #d1d5db" }}
+                />
+                <button
+                  onClick={async () => {
+                    if (editingName.trim()) {
+                      await auth.updateDisplayName(editingName.trim());
+                      setEditingName("");
+                    }
+                  }}
+                  disabled={!editingName.trim()}
+                  className="text-[13px] px-3 py-1.5 rounded-md bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50 cursor-pointer"
+                >
+                  Sačuvaj
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[13px] text-gray-600">Email obaveštenja</span>
+              <button
+                onClick={() => auth.updateEmailNotifications(!auth.user!.emailNotifications)}
+                className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer ${
+                  auth.user.emailNotifications ? "bg-orange-500" : "bg-gray-300"
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+                    auth.user.emailNotifications ? "translate-x-5" : ""
+                  }`}
+                />
+              </button>
+            </div>
+            <button
+              onClick={async () => {
+                await auth.signOut();
+                setShowSettings(false);
+              }}
+              className="flex items-center gap-1.5 text-[13px] text-red-500 hover:text-red-600 cursor-pointer"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Odjavi se
             </button>
           </div>
         )}
@@ -284,6 +401,47 @@ export function Drawer({
           </div>
         )}
 
+        {/* Notifications tab content */}
+        {activeTab === "notifications" && auth.user && (
+          <div className="flex-1 overflow-y-auto">
+            {notifications.length > 0 && (
+              <div className="px-5 py-2 border-b border-border">
+                <button
+                  onClick={onMarkAllRead}
+                  className="text-[12px] text-orange-500 hover:underline cursor-pointer"
+                >
+                  Označi sve kao pročitano
+                </button>
+              </div>
+            )}
+            {notifications.length === 0 ? (
+              <p className="text-[14px] text-gray-400 text-center py-10">
+                Nema obaveštenja.
+              </p>
+            ) : (
+              notifications.map((n) => (
+                <button
+                  key={n._id}
+                  onClick={() => {
+                    window.open(`https://www.polovniautomobili.com/auto-oglasi/${n.listingId}`, "_blank");
+                  }}
+                  className={`w-full text-left px-5 py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
+                    !n.read ? "bg-orange-50/50" : ""
+                  }`}
+                >
+                  <p className="text-[13px] text-gray-700">
+                    <span className="font-medium">{n.triggerAuthorName}</span>
+                    {" je odgovorio/la na tvoj komentar"}
+                  </p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">
+                    {formatTimeAgo(n.createdAt)}
+                  </p>
+                </button>
+              ))
+            )}
+          </div>
+        )}
+
         <div className="shrink-0 px-5 py-3 border-t border-border">
           <p className="text-[12px] text-muted-foreground/70 text-center leading-normal">
             Sviđa ti se? Podeli sa prijateljima, komentari su korisniji za sve! 🚗
@@ -295,4 +453,17 @@ export function Drawer({
       </div>
     </div>
   );
+}
+
+function formatTimeAgo(timestamp: number): string {
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60_000);
+  if (minutes < 1) return "upravo";
+  if (minutes < 60) return `pre ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `pre ${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `pre ${days}d`;
+  const weeks = Math.floor(days / 7);
+  return `pre ${weeks}n`;
 }
