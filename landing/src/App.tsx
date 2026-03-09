@@ -1,7 +1,25 @@
+import { useEffect } from "react";
 import { Download, ChevronUp, ChevronDown, User, MessageSquare, ThumbsUp, Shield, Eye } from "lucide-react";
 import { track } from "@vercel/analytics";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
+
+function useCanonical(path: string) {
+  useEffect(() => {
+    const url = `https://polovnikomentari.com${path}`;
+    let link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (link) {
+      link.href = url;
+    } else {
+      link = document.createElement("link");
+      link.rel = "canonical";
+      link.href = url;
+      document.head.appendChild(link);
+    }
+    const ogUrl = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
+    if (ogUrl) ogUrl.content = url;
+  }, [path]);
+}
 
 const steps = [
   { number: "01", text: "Instaliraj ekstenziju" },
@@ -99,11 +117,14 @@ function ProductDemo() {
 }
 
 export default function App() {
-  if (window.location.pathname === "/privacy") {
+  const path = window.location.pathname;
+  useCanonical(path);
+
+  if (path === "/privacy") {
     return <PrivacyPolicy />;
   }
 
-  if (window.location.pathname === "/terms") {
+  if (path === "/terms") {
     return <TermsOfService />;
   }
 

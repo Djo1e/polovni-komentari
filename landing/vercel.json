@@ -1,6 +1,14 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "www.polovnikomentari.com" }],
+      "destination": "https://polovnikomentari.com/:path",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/privacy", "destination": "/index.html" },
     { "source": "/terms", "destination": "/index.html" }
