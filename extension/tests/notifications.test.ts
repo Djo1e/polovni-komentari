@@ -1,7 +1,17 @@
 import { convexTest } from "convex-test";
-import { expect, test } from "vitest";
+import { expect, test, vi, beforeEach, afterEach } from "vitest";
 import { api, internal } from "../convex/_generated/api";
 import schema from "../convex/schema";
+
+// Use fake timers to prevent convex-test from auto-executing scheduled
+// functions (email actions). This avoids "Write outside of transaction"
+// errors from the convex-test scheduler trying to update _scheduled_functions.
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 test("createNotificationsForReply creates notification for parent comment author", async () => {
   const t = convexTest(schema);

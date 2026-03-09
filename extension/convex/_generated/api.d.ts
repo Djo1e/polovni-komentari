@@ -10,9 +10,12 @@
 
 import type * as comments from "../comments.js";
 import type * as crons from "../crons.js";
+import type * as email from "../email.js";
 import type * as engagementQuestions from "../engagementQuestions.js";
 import type * as listings from "../listings.js";
+import type * as notifications from "../notifications.js";
 import type * as reactions from "../reactions.js";
+import type * as users from "../users.js";
 import type * as vinChecks from "../vinChecks.js";
 import type * as votes from "../votes.js";
 
@@ -25,9 +28,12 @@ import type {
 declare const fullApi: ApiFromModules<{
   comments: typeof comments;
   crons: typeof crons;
+  email: typeof email;
   engagementQuestions: typeof engagementQuestions;
   listings: typeof listings;
+  notifications: typeof notifications;
   reactions: typeof reactions;
+  users: typeof users;
   vinChecks: typeof vinChecks;
   votes: typeof votes;
 }>;
