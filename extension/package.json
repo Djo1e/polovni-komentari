@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && rm -f convex/*.js src/**/*.js tests/**/*.js",
+    "build:prod": "bash -c 'cp .env.local .env.local.bak 2>/dev/null; rm -f .env.local; npm run build; mv .env.local.bak .env.local 2>/dev/null; echo \"Built with prod DB (stoic-bee-994)\"'",
+    "zip": "npm run build:prod && cd dist && zip -r ../polovni-komentari-$(node -p \"require(\\\"../manifest.json\\\").version\").zip . && cd .. && echo \"Packaged polovni-komentari-$(node -p \"require(\\\"./manifest.json\\\").version\").zip\"",
     "preview": "vite preview",
     "test": "vitest"
   },
