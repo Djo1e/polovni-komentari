@@ -30,7 +30,7 @@ export const sendReplyNotificationEmail = internalAction({
     const unsubscribeUrl = `${convexUrl}/unsubscribe?userId=${args.userId}`;
 
     await resend.emails.send({
-      from: "Polovni Komentari <notifications@polovnikomentari.rs>",
+      from: "Polovni Komentari <notifications@polovnikomentari.com>",
       to: args.toEmail,
       subject: `${args.replierName} je odgovorio/la na tvoj komentar`,
       html: `
