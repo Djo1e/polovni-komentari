@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { action, internalMutation, query, internalQuery } from "./_generated/server";
+import { action, internalMutation, mutation, query, internalQuery } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 
@@ -123,5 +123,38 @@ export const getUser = query({
       emailNotifications: user.emailNotifications,
       firstName: user.firstName,
     };
+  },
+});
+
+export const updateDisplayName = mutation({
+  args: {
+    userId: v.id("users"),
+    displayName: v.string(),
+  },
+  handler: async (ctx, { userId, displayName }) => {
+    const trimmed = displayName.trim();
+    if (trimmed.length === 0) throw new Error("Display name cannot be empty");
+    if (trimmed.length > 30) throw new Error("Display name too long");
+    await ctx.db.patch(userId, { displayName: trimmed, isCustomName: true });
+  },
+});
+
+export const updateEmailNotifications = mutation({
+  args: {
+    userId: v.id("users"),
+    enabled: v.boolean(),
+  },
+  handler: async (ctx, { userId, enabled }) => {
+    await ctx.db.patch(userId, { emailNotifications: enabled });
+  },
+});
+
+export const disableEmailNotifications = internalMutation({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
+    const user = await ctx.db.get(userId);
+    if (user) {
+      await ctx.db.patch(userId, { emailNotifications: false });
+    }
   },
 });
