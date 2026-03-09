@@ -1,3 +1,5 @@
 src/**/*.js
 tsconfig.tsbuildinfo
 .vercel
+.astro/
+dist/
