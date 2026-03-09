@@ -36,17 +36,28 @@ export function getStoredUserId(): Id<"users"> | null {
   return stored?.userId ?? null;
 }
 
+function sendMessage<T>(msg: Record<string, unknown>): Promise<T> {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(msg, (response: T & { ok: boolean; error?: string }) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+      } else if (!response.ok) {
+        reject(new Error(response.error ?? "Unknown error"));
+      } else {
+        resolve(response);
+      }
+    });
+  });
+}
+
 export async function signInWithGoogle(anonymousId: string): Promise<UserData> {
-  const authResult = await chrome.identity.getAuthToken({ interactive: true });
-  const token = authResult.token;
-  if (!token) {
-    throw new Error("Failed to get auth token");
-  }
+  const result = await sendMessage<{ ok: boolean; token?: string }>({ type: "GOOGLE_AUTH" });
+  if (!result.token) throw new Error("Failed to get auth token");
 
   const convexUrl = import.meta.env.VITE_CONVEX_URL as string;
   const client = new ConvexHttpClient(convexUrl);
   const signInResult = await client.action(api.users.signIn, {
-    googleToken: token,
+    googleToken: result.token,
     anonymousId,
   });
 
@@ -65,13 +76,9 @@ export async function signInWithGoogle(anonymousId: string): Promise<UserData> {
 
 export async function signOut(): Promise<void> {
   try {
-    const result = await chrome.identity.getAuthToken({ interactive: false });
-    if (result.token) {
-      await chrome.identity.removeCachedAuthToken({ token: result.token });
-    }
+    await sendMessage({ type: "GOOGLE_AUTH_REVOKE" });
   } catch {
     // No token cached, that's fine
   }
-
   clearStoredUser();
 }
