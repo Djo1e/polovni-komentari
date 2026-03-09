@@ -13,9 +13,10 @@ export async function createNotificationsForReplyHelper(
     listingId: string;
     authorName: string;
     authorId: string;
+    userId?: Id<"users">;
   }
 ) {
-  const { commentId, parentId, listingId, authorName, authorId } = args;
+  const { commentId, parentId, listingId, authorName, authorId, userId } = args;
 
   // Find the direct parent comment
   const parent = await ctx.db.get(parentId);
@@ -33,18 +34,32 @@ export async function createNotificationsForReplyHelper(
   // Collect unique signed-in user IDs to notify
   const userIdsToNotify = new Set<Id<"users">>();
 
-  // Notify parent comment author (if signed in)
-  if (parent.userId) userIdsToNotify.add(parent.userId);
+  // Resolve user ID from comment: use userId field, or look up by authorId
+  async function resolveUserId(comment: { userId?: Id<"users">; authorId: string }): Promise<Id<"users"> | null> {
+    if (comment.userId) return comment.userId;
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_anonymousId", (q) => q.eq("anonymousId", comment.authorId))
+      .first();
+    return user?._id ?? null;
+  }
 
-  // Notify root comment author (if signed in and different from parent)
-  if (root.userId) userIdsToNotify.add(root.userId);
+  // Notify parent comment author
+  const parentUserId = await resolveUserId(parent);
+  if (parentUserId) userIdsToNotify.add(parentUserId);
+
+  // Notify root comment author (if different from parent)
+  const rootUserId = await resolveUserId(root);
+  if (rootUserId) userIdsToNotify.add(rootUserId);
 
   // Don't notify the reply author themselves
-  const replierUser = await ctx.db
-    .query("users")
-    .withIndex("by_anonymousId", (q) => q.eq("anonymousId", authorId))
-    .unique();
-  if (replierUser) userIdsToNotify.delete(replierUser._id);
+  if (userId) {
+    userIdsToNotify.delete(userId);
+  } else {
+    // Anonymous replier: resolve their userId via authorId to exclude self-notifications
+    const replierUserId = await resolveUserId({ authorId });
+    if (replierUserId) userIdsToNotify.delete(replierUserId);
+  }
 
   // Create notifications
   for (const userId of userIdsToNotify) {
@@ -64,7 +79,8 @@ export async function createNotificationsForReplyHelper(
     if (user && user.emailNotifications) {
       // Get the reply text for the email snippet
       const replyComment = await ctx.db.get(commentId);
-      const replySnippet = replyComment ? replyComment.text.slice(0, 200) : "";
+      const fullText = replyComment ? replyComment.text : "";
+      const replySnippet = fullText.length > 40 ? fullText.slice(0, 40) + "..." : fullText;
 
       const listing = await ctx.db
         .query("listings")
@@ -93,6 +109,7 @@ export const createNotificationsForReply = internalMutation({
     listingId: v.string(),
     authorName: v.string(),
     authorId: v.string(),
+    userId: v.optional(v.id("users")),
   },
   handler: async (ctx, args) => {
     await createNotificationsForReplyHelper(ctx, args);
@@ -100,38 +117,60 @@ export const createNotificationsForReply = internalMutation({
 });
 
 export const getNotifications = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, { userId }) => {
-    return ctx.db
+  args: { userId: v.id("users"), sessionToken: v.string() },
+  handler: async (ctx, { userId, sessionToken }) => {
+    const user = await ctx.db.get(userId);
+    if (!user || user.sessionToken !== sessionToken) return [];
+
+    const notifications = await ctx.db
       .query("notifications")
       .withIndex("by_userId_createdAt", (q) => q.eq("userId", userId))
       .order("desc")
       .take(50);
+
+    const listingCache = new Map<string, string | null>();
+    const results = [];
+    for (const n of notifications) {
+      if (!listingCache.has(n.listingId)) {
+        const listing = await ctx.db
+          .query("listings")
+          .withIndex("by_listingId", (q) => q.eq("listingId", n.listingId))
+          .first();
+        listingCache.set(n.listingId, listing?.url ?? null);
+      }
+      results.push({ ...n, listingUrl: listingCache.get(n.listingId)! });
+    }
+    return results;
   },
 });
 
 export const getUnreadCount = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, { userId }) => {
+  args: { userId: v.id("users"), sessionToken: v.string() },
+  handler: async (ctx, { userId, sessionToken }) => {
+    const user = await ctx.db.get(userId);
+    if (!user || user.sessionToken !== sessionToken) return 0;
+
     const unread = await ctx.db
       .query("notifications")
       .withIndex("by_userId_read", (q) =>
         q.eq("userId", userId).eq("read", false)
       )
-      .collect();
+      .take(100);
     return unread.length;
   },
 });
 
 export const markAllRead = mutation({
-  args: { userId: v.id("users") },
-  handler: async (ctx, { userId }) => {
+  args: { userId: v.id("users"), sessionToken: v.string() },
+  handler: async (ctx, { userId, sessionToken }) => {
+    const user = await ctx.db.get(userId);
+    if (!user || user.sessionToken !== sessionToken) throw new Error("Invalid session");
     const unread = await ctx.db
       .query("notifications")
       .withIndex("by_userId_read", (q) =>
         q.eq("userId", userId).eq("read", false)
       )
-      .collect();
+      .take(500);
     for (const n of unread) {
       await ctx.db.patch(n._id, { read: true });
     }
@@ -139,8 +178,12 @@ export const markAllRead = mutation({
 });
 
 export const markRead = mutation({
-  args: { notificationId: v.id("notifications") },
-  handler: async (ctx, { notificationId }) => {
+  args: { notificationId: v.id("notifications"), userId: v.id("users"), sessionToken: v.string() },
+  handler: async (ctx, { notificationId, userId, sessionToken }) => {
+    const user = await ctx.db.get(userId);
+    if (!user || user.sessionToken !== sessionToken) throw new Error("Invalid session");
+    const notification = await ctx.db.get(notificationId);
+    if (!notification || notification.userId !== userId) throw new Error("Not your notification");
     await ctx.db.patch(notificationId, { read: true });
   },
 });

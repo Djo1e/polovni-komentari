@@ -3,8 +3,9 @@ import { Comment, CommentItem } from "./CommentItem";
 import { LatestComment, LatestFeedItem } from "./LatestFeedItem";
 import { PostForm } from "./PostForm";
 import { VinCheck } from "./VinCheck";
-import { X, Bell, Settings, LogOut } from "lucide-react";
+import { X, Bell, ChevronDown, LogOut } from "lucide-react";
 import { trackEvent } from "../utils/tracking";
+import { formatTimeAgo } from "../utils/formatTimeAgo";
 
 type Tab = "listing" | "latest" | "notifications";
 
@@ -40,15 +41,17 @@ interface Props {
     _id: import("../../convex/_generated/dataModel").Id<"notifications">;
     triggerAuthorName: string;
     listingId: string;
+    listingUrl: string | null;
     read: boolean;
     createdAt: number;
     type: string;
   }>;
   onMarkAllRead: () => Promise<void>;
+  onMarkRead: (notificationId: import("../../convex/_generated/dataModel").Id<"notifications">) => void;
 }
 
 const DRAWER_STATE_KEY = "paCommentsDrawerOpen";
-const WHATS_NEW_KEY = "paWhatsNewDismissed_vinCheck";
+const WHATS_NEW_KEY = "paWhatsNewDismissed_googleSignIn";
 
 export function Drawer({
   listingId,
@@ -73,6 +76,7 @@ export function Drawer({
   unreadCount,
   notifications,
   onMarkAllRead,
+  onMarkRead,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -82,8 +86,9 @@ export function Drawer({
   const [showWhatsNew, setShowWhatsNew] = useState(
     () => !localStorage.getItem(WHATS_NEW_KEY)
   );
-  const [showSettings, setShowSettings] = useState(false);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [editingName, setEditingName] = useState("");
+  const [accountError, setAccountError] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -124,8 +129,8 @@ export function Drawer({
       <button
         onClick={toggle}
         disabled={animating}
-        style={{ transform: "translateX(-100%) translateY(-50%)", boxShadow: "-4px 0 16px rgba(0, 0, 0, 0.12)" }}
-        className="absolute cursor-pointer left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80 relative"
+        style={{ position: "absolute", transform: "translateX(-100%) translateY(-50%)", boxShadow: "-4px 0 16px rgba(0, 0, 0, 0.12)" }}
+        className="cursor-pointer left-0 top-1/2 flex flex-col items-center justify-center gap-1 bg-orange-500 text-white w-9 rounded-l-lg p-6 shadow-lg hover:bg-orange-600 disabled:opacity-80"
         aria-label="Toggle comments"
       >
         <span className="text-lg leading-none">💬</span>
@@ -135,7 +140,12 @@ export function Drawer({
           </span>
         )}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-600 rounded-full h-3 w-3 border-2 border-orange-500" />
+          <span
+            style={{ position: "absolute", top: 2, left: 2, minWidth: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 4px" }}
+            className="bg-red-500 rounded-full text-[10px] font-bold text-white leading-none border-2 border-white"
+          >
+            {unreadCount > 9 ? "9+" : unreadCount}
+          </span>
         )}
       </button>
 
@@ -147,38 +157,54 @@ export function Drawer({
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-border shrink-0 flex items-center justify-between">
           <h2 className="text-[17px] font-semibold text-foreground tracking-[-0.01em]">
-            {listingId ? "Komentari" : "Poslednji komentari"}
+            {activeTab === "notifications" ? "Obaveštenja" : listingId ? "Komentari" : "Poslednji komentari"}
           </h2>
-          <button
-            onClick={toggle}
-            disabled={animating}
-            className="rounded-sm cursor-pointer opacity-70 hover:opacity-100"
-            aria-label="Close"
-          >
-            <X className="h-[18px] w-[18px]" />
-          </button>
-        </div>
-
-        {/* Tabs */}
-        {(listingId || auth.user) && (
-          <div className="flex border-b border-border shrink-0">
-            {listingId && (
+          <div className="flex items-center gap-1.5">
+            {auth.user && (
               <button
-                onClick={() => { setActiveTab("listing"); trackEvent("tab_switch", { tab: "listing" }); }}
-                className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
-                  activeTab === "listing"
-                    ? "text-orange-500 border-b-2 border-orange-500"
-                    : "text-muted-foreground hover:text-foreground"
+                onClick={() => { setActiveTab(activeTab === "notifications" ? (listingId ? "listing" : "latest") : "notifications"); trackEvent("tab_switch", { tab: "notifications" }); }}
+                className={`rounded-md cursor-pointer p-1.5 transition-colors relative ${
+                  activeTab === "notifications" ? "text-orange-500 bg-orange-50" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
                 }`}
+                aria-label="Obaveštenja"
               >
-                Ovaj oglas
-                {commentCount > 0 && (
-                  <span className="ml-1 text-muted-foreground font-normal">
-                    ({commentCount})
+                <Bell className="h-[18px] w-[18px]" />
+                {unreadCount > 0 && (
+                  <span style={{ position: "absolute", top: -2, right: -2 }} className="bg-red-500 text-white text-[9px] rounded-full h-3.5 min-w-3.5 flex items-center justify-center px-0.5 leading-none font-medium">
+                    {unreadCount > 99 ? "99+" : unreadCount}
                   </span>
                 )}
               </button>
             )}
+            <button
+              onClick={toggle}
+              disabled={animating}
+              className="rounded-md cursor-pointer p-1.5 opacity-70 hover:opacity-100 hover:bg-gray-100 transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-[18px] w-[18px]" />
+            </button>
+          </div>
+        </div>
+
+        {/* Tabs — only listing/latest, no bell */}
+        {listingId && activeTab !== "notifications" && (
+          <div className="flex border-b border-border shrink-0">
+            <button
+              onClick={() => { setActiveTab("listing"); trackEvent("tab_switch", { tab: "listing" }); }}
+              className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
+                activeTab === "listing"
+                  ? "text-orange-500 border-b-2 border-orange-500"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Ovaj oglas
+              {commentCount > 0 && (
+                <span className="ml-1 text-muted-foreground font-normal">
+                  ({commentCount})
+                </span>
+              )}
+            </button>
             <button
               onClick={() => { setActiveTab("latest"); trackEvent("tab_switch", { tab: "latest" }); }}
               className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors ${
@@ -189,30 +215,13 @@ export function Drawer({
             >
               Najnoviji
             </button>
-            {auth.user && (
-              <button
-                onClick={() => { setActiveTab("notifications"); trackEvent("tab_switch", { tab: "notifications" }); }}
-                className={`flex-1 cursor-pointer text-[15px] py-2.5 font-medium transition-colors relative ${
-                  activeTab === "notifications"
-                    ? "text-orange-500 border-b-2 border-orange-500"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Bell className="h-4 w-4 inline" />
-                {unreadCount > 0 && (
-                  <span className="absolute top-1 ml-0.5 bg-red-500 text-white text-[9px] rounded-full h-3.5 min-w-3.5 flex items-center justify-center px-1 leading-none">
-                    {unreadCount > 99 ? "99+" : unreadCount}
-                  </span>
-                )}
-              </button>
-            )}
           </div>
         )}
 
         {showWhatsNew && (
           <div className="px-4 py-2.5 bg-blue-50 border-b border-blue-200 shrink-0 flex items-start gap-2">
             <span className="text-[14px] leading-snug text-blue-700">
-              <span className="font-semibold">Novo:</span> Ako oglas ima broj šasije, sada možeš proveriti da li je vozilo uvezeno preko ABS baze.
+              <span className="font-semibold">Novo:</span> Prijavi se sa Google nalogom i dobijaj obaveštenja kada neko odgovori na tvoj komentar.
             </span>
             <button
               onClick={dismissWhatsNew}
@@ -225,7 +234,7 @@ export function Drawer({
         )}
 
         {/* Sign-in prompt (when not signed in) */}
-        {!auth.user && !showWhatsNew && (
+        {!auth.user && (
           <div className="px-5 py-2.5 border-b border-border shrink-0">
             <button
               onClick={auth.signIn}
@@ -238,82 +247,122 @@ export function Drawer({
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              {auth.signingIn ? "Prijavljivanje..." : "Prijavi se za obaveštenja o odgovorima"}
+              {auth.signingIn ? "Prijavljivanje..." : "Prijavi se"}
             </button>
           </div>
         )}
 
         {/* Signed-in user bar */}
-        {auth.user && (
-          <div className="px-5 py-2 border-b border-border shrink-0 flex items-center justify-between">
-            <span className="text-[13px] text-gray-600">
-              {auth.user.displayName}
-              <span className="ml-1 text-[10px] text-green-600">✓</span>
-            </span>
+        {auth.user && activeTab !== "notifications" && (
+          <div className="shrink-0">
             <button
-              onClick={() => setShowSettings(!showSettings)}
-              className="text-gray-400 hover:text-gray-600 cursor-pointer"
-              aria-label="Podešavanja"
+              onClick={() => setShowAccountMenu(!showAccountMenu)}
+              className="w-full px-5 py-2.5 flex items-center justify-between cursor-pointer hover:bg-gray-50/80 transition-colors border-b border-border"
             >
-              <Settings className="h-4 w-4" />
-            </button>
-          </div>
-        )}
-
-        {/* Settings panel */}
-        {showSettings && auth.user && (
-          <div className="px-5 py-3 border-b border-border shrink-0 bg-gray-50 space-y-3">
-            <div>
-              <label className="text-[12px] font-medium text-muted-foreground mb-1 block">Ime za prikaz</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={editingName}
-                  onChange={(e) => setEditingName(e.target.value)}
-                  placeholder={auth.user.displayName}
-                  maxLength={30}
-                  className="flex-1 text-sm px-3 py-1.5 rounded-md bg-white text-gray-700 placeholder:text-gray-300"
-                  style={{ border: "1px solid #d1d5db" }}
-                />
-                <button
-                  onClick={async () => {
-                    if (editingName.trim()) {
-                      await auth.updateDisplayName(editingName.trim());
-                      setEditingName("");
-                    }
-                  }}
-                  disabled={!editingName.trim()}
-                  className="text-[13px] px-3 py-1.5 rounded-md bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50 cursor-pointer"
-                >
-                  Sačuvaj
-                </button>
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-6 rounded-full bg-orange-100 flex items-center justify-center">
+                  <span className="text-[11px] font-semibold text-orange-600">
+                    {auth.user.displayName.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-[13px] font-medium text-gray-700">
+                  {auth.user.displayName}
+                </span>
+                <span className="text-[10px] text-green-600">✓</span>
               </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[13px] text-gray-600">Email obaveštenja</span>
-              <button
-                onClick={() => auth.updateEmailNotifications(!auth.user!.emailNotifications)}
-                className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer ${
-                  auth.user.emailNotifications ? "bg-orange-500" : "bg-gray-300"
-                }`}
-              >
-                <span
-                  className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
-                    auth.user.emailNotifications ? "translate-x-5" : ""
-                  }`}
-                />
-              </button>
-            </div>
-            <button
-              onClick={async () => {
-                await auth.signOut();
-                setShowSettings(false);
-              }}
-              className="flex items-center gap-1.5 text-[13px] text-red-500 hover:text-red-600 cursor-pointer"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              Odjavi se
+              <ChevronDown className={`h-3.5 w-3.5 text-gray-400 transition-transform ${showAccountMenu ? "rotate-180" : ""}`} />
             </button>
+
+            {/* Account menu dropdown */}
+            {showAccountMenu && (
+              <div className="px-5 py-3 border-b border-border bg-gray-50/60 space-y-3">
+                <div>
+                  <label className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1.5 block">Ime za prikaz</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editingName}
+                      onChange={(e) => setEditingName(e.target.value)}
+                      placeholder={auth.user.displayName}
+                      maxLength={30}
+                      className="flex-1 text-[13px] px-3 py-1.5 rounded-md bg-white text-gray-700 placeholder:text-gray-300"
+                      style={{ border: "1px solid #e5e7eb" }}
+                    />
+                    <button
+                      onClick={async () => {
+                        if (editingName.trim()) {
+                          try {
+                            setAccountError(null);
+                            await auth.updateDisplayName(editingName.trim());
+                            setEditingName("");
+                          } catch (e: any) {
+                            setAccountError(e.message ?? "Greška pri čuvanju imena");
+                          }
+                        }
+                      }}
+                      disabled={!editingName.trim()}
+                      className="text-[12px] font-medium px-3 py-1.5 rounded-md bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-40 cursor-pointer transition-colors"
+                    >
+                      Sačuvaj
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between py-0.5">
+                  <span className="text-[13px] text-gray-600">Email obaveštenja</span>
+                  <button
+                    onClick={async () => {
+                      try {
+                        setAccountError(null);
+                        await auth.updateEmailNotifications(!auth.user!.emailNotifications);
+                      } catch (e: any) {
+                        setAccountError(e.message ?? "Greška pri ažuriranju");
+                      }
+                    }}
+                    style={{
+                      position: "relative",
+                      width: 36,
+                      height: 20,
+                      borderRadius: 10,
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      backgroundColor: auth.user.emailNotifications ? "#f97316" : "#d1d5db",
+                      transition: "background-color 200ms",
+                    }}
+                  >
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: 2,
+                        left: 2,
+                        width: 16,
+                        height: 16,
+                        borderRadius: 8,
+                        backgroundColor: "#fff",
+                        boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                        transform: auth.user.emailNotifications ? "translateX(16px)" : "translateX(0)",
+                        transition: "transform 200ms",
+                      }}
+                    />
+                  </button>
+                </div>
+                {accountError && (
+                  <p className="text-[11px] text-red-500">{accountError}</p>
+                )}
+                <div className="pt-1 border-t border-gray-200">
+                  <button
+                    onClick={async () => {
+                      await auth.signOut();
+                      setShowAccountMenu(false);
+                    }}
+                    className="flex items-center gap-1.5 text-[12px] text-gray-400 hover:text-red-500 cursor-pointer transition-colors"
+                  >
+                    <LogOut className="h-3 w-3" />
+                    Odjavi se
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -350,6 +399,7 @@ export function Drawer({
                 username={username}
                 isAutoGenerated={isAutoGenerated}
                 onUsernameChange={onUsernameChange}
+                isSignedIn={!!auth.user}
               />
               {vin && <VinCheck vin={vin} boughtNewInSerbia={boughtNewInSerbia} />}
             </div>
@@ -405,7 +455,7 @@ export function Drawer({
         {activeTab === "notifications" && auth.user && (
           <div className="flex-1 overflow-y-auto">
             {notifications.length > 0 && (
-              <div className="px-5 py-2 border-b border-border">
+              <div className="px-5 py-2 border-b border-border flex items-center justify-between">
                 <button
                   onClick={onMarkAllRead}
                   className="text-[12px] text-orange-500 hover:underline cursor-pointer"
@@ -415,15 +465,31 @@ export function Drawer({
               </div>
             )}
             {notifications.length === 0 ? (
-              <p className="text-[14px] text-gray-400 text-center py-10">
-                Nema obaveštenja.
-              </p>
+              <div className="flex flex-col items-center justify-center py-16 px-8">
+                <Bell className="h-8 w-8 text-gray-200 mb-3" />
+                <p className="text-[14px] text-gray-400 text-center">
+                  Nema obaveštenja.
+                </p>
+                <p className="text-[12px] text-gray-300 text-center mt-1">
+                  Ovde ćeš videti kada neko odgovori na tvoj komentar.
+                </p>
+              </div>
             ) : (
               notifications.map((n) => (
                 <button
                   key={n._id}
                   onClick={() => {
-                    window.open(`https://www.polovniautomobili.com/auto-oglasi/${n.listingId}`, "_blank");
+                    if (!n.read) onMarkRead(n._id);
+                    const url = n.listingUrl ?? `https://www.polovniautomobili.com/auto-oglasi/${n.listingId}`;
+                    try {
+                      const currentPath = window.location.pathname;
+                      const targetPath = new URL(url).pathname;
+                      if (currentPath === targetPath) {
+                        window.location.reload();
+                        return;
+                      }
+                    } catch {}
+                    window.location.href = url;
                   }}
                   className={`w-full text-left px-5 py-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
                     !n.read ? "bg-orange-50/50" : ""
@@ -453,17 +519,4 @@ export function Drawer({
       </div>
     </div>
   );
-}
-
-function formatTimeAgo(timestamp: number): string {
-  const diff = Date.now() - timestamp;
-  const minutes = Math.floor(diff / 60_000);
-  if (minutes < 1) return "upravo";
-  if (minutes < 60) return `pre ${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `pre ${hours}h`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `pre ${days}d`;
-  const weeks = Math.floor(days / 7);
-  return `pre ${weeks}n`;
 }

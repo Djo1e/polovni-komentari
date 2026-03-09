@@ -12,6 +12,7 @@ import type * as comments from "../comments.js";
 import type * as crons from "../crons.js";
 import type * as email from "../email.js";
 import type * as engagementQuestions from "../engagementQuestions.js";
+import type * as http from "../http.js";
 import type * as listings from "../listings.js";
 import type * as notifications from "../notifications.js";
 import type * as reactions from "../reactions.js";
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   email: typeof email;
   engagementQuestions: typeof engagementQuestions;
+  http: typeof http;
   listings: typeof listings;
   notifications: typeof notifications;
   reactions: typeof reactions;

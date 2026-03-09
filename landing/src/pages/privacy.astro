@@ -18,6 +18,7 @@ const sections = [
     items: [
       "Anonimni identifikator — nasumično generisan ID koji se čuva u lokalnoj memoriji vašeg pregledača. Nije povezan sa vašim stvarnim identitetom.",
       "Nadimak — automatski generisan (npr. \"Golf123\") ili po vašem izboru. Čuva se u lokalnoj memoriji pregledača.",
+      "Google nalog (opciono) — ako se prijavite putem Google-a, prikupljamo vaše ime, email adresu i Google ID. Ovi podaci se koriste za prikaz vašeg imena uz komentare i za slanje email obaveštenja kada neko odgovori na vaš komentar.",
       "Komentari i glasovi — tekst koji postavljate i glasovi koje dajete se šalju na naš server i vidljivi su svim korisnicima ekstenzije.",
       "Rezultati provere VIN broja — kada koristite opciju provere broja šasije, VIN se šalje na abs.gov.rs (javni servis Agencije za bezbednost saobraćaja). Rezultat se čuva na našem serveru kako bi naredne provere istog VIN-a bile trenutne.",
       "Anonimna analitika korišćenja — prikupljamo anonimne podatke o tome kako koristite ekstenziju (npr. otvaranje panela, postavljanje komentara, glasanje) putem Google Analytics-a. Ovi podaci ne sadrže lične informacije i koriste se isključivo za unapređenje ekstenzije.",
@@ -26,7 +27,7 @@ const sections = [
   {
     title: "Podaci koje NE prikupljamo",
     items: [
-      "Nikakve lične podatke (ime, email, telefon, itd.)",
+      "Lične podatke bez vašeg pristanka — ime i email prikupljamo samo ako se prijavite putem Google-a.",
       "Istoriju pretraživanja",
       "Sadržaj stranica sa polovniautomobili.com",
       "Kolačiće ili piksele za praćenje",
@@ -35,14 +36,14 @@ const sections = [
   {
     title: "Gde se podaci čuvaju",
     items: [
-      "Lokalni podaci (anonimni ID, nadimak, podešavanja) se čuvaju u vašem pregledaču koristeći localStorage na domenu polovniautomobili.com.",
+      "Lokalni podaci (anonimni ID, nadimak) se čuvaju u localStorage pregledača. Podaci o prijavljenom nalogu se čuvaju u chrome.storage.local (dostupno samo ekstenziji).",
       "Komentari i glasovi se čuvaju na Convex (convex.dev), cloud bazi podataka.",
     ],
   },
   {
     title: "Dozvole",
     content:
-      "Ova ekstenzija zahteva pristup sajtu abs.gov.rs za funkciju provere broja šasije, pristup sajtu google-analytics.com za slanje anonimne analitike, i dozvolu za skladištenje podataka (storage) za čuvanje ID-a sesije analitike.",
+      "Ova ekstenzija zahteva pristup sajtu abs.gov.rs za funkciju provere broja šasije, pristup sajtu google-analytics.com za slanje anonimne analitike, dozvolu za skladištenje podataka (storage) za čuvanje podešavanja i podataka o nalogu, i dozvolu za identitet (identity) za prijavu putem Google naloga.",
   },
   {
     title: "Servisi trećih strana",
@@ -53,6 +54,8 @@ const sections = [
     title: "Brisanje podataka",
     items: [
       "Da biste obrisali lokalne podatke, obrišite podatke sajta za polovniautomobili.com u podešavanjima pregledača.",
+      "Da biste obrisali podatke o Google nalogu, odjavite se iz ekstenzije.",
+      "Email obaveštenja možete isključiti u podešavanjima naloga ili klikom na link za odjavu u svakom emailu.",
       "Komentari i glasovi su javni i trenutno ih korisnici ne mogu sami obrisati. Kontaktirajte nas ako želite da uklonite komentar.",
     ],
   },
@@ -79,6 +82,7 @@ const sectionsEn = [
     items: [
       "Anonymous identifier — a randomly generated ID stored in your browser's local storage. Not linked to your real identity.",
       "Username — either auto-generated (e.g. \"Golf123\") or chosen by you. Stored in your browser's local storage.",
+      "Google account (optional) — if you sign in with Google, we collect your name, email address, and Google ID. This data is used to display your name on comments and to send email notifications when someone replies to your comment.",
       "Comments and votes — text you post and votes you cast are sent to our server and visible to all users of the extension.",
       "VIN check results — when you use the VIN check feature, the chassis number (VIN) from the listing is sent to abs.gov.rs (a public government service) to check vehicle import status. The result is cached on our server so that subsequent checks for the same VIN load instantly.",
       "Anonymous usage analytics — we collect anonymous data about how you use the extension (e.g. opening the panel, posting comments, voting) via Google Analytics. This data contains no personal information and is used solely to improve the extension.",
@@ -87,7 +91,7 @@ const sectionsEn = [
   {
     title: "Data we do NOT collect",
     items: [
-      "No personal information (name, email, phone, etc.)",
+      "No personal information without your consent — name and email are only collected if you sign in with Google.",
       "No browsing history",
       "No page content from polovniautomobili.com",
       "No cookies or tracking pixels",
@@ -96,13 +100,13 @@ const sectionsEn = [
   {
     title: "Where data is stored",
     items: [
-      "Local data (anonymous ID, username, preferences) is stored in your browser using localStorage on the polovniautomobili.com domain.",
+      "Local data (anonymous ID, username) is stored in your browser's localStorage. Signed-in account data is stored in chrome.storage.local (accessible only to the extension).",
       "Comments and votes are stored on Convex (convex.dev), a cloud database service.",
     ],
   },
   {
     title: "Permissions",
-    content: "This extension requests host access to abs.gov.rs for the VIN check feature, access to google-analytics.com for sending anonymous analytics, and the storage permission for persisting analytics session IDs.",
+    content: "This extension requests host access to abs.gov.rs for the VIN check feature, access to google-analytics.com for sending anonymous analytics, the storage permission for persisting preferences and account data, and the identity permission for Google Sign-In.",
   },
   {
     title: "Third-party services",
@@ -113,6 +117,8 @@ const sectionsEn = [
     title: "Data deletion",
     items: [
       "To delete your local data, clear your browser's site data for polovniautomobili.com.",
+      "To delete your Google account data, sign out from the extension.",
+      "You can disable email notifications in your account settings or by clicking the unsubscribe link in any notification email.",
       "Comments and votes are public and cannot currently be deleted by users. Contact us if you need a comment removed.",
     ],
   },
@@ -154,7 +160,7 @@ const sectionsEn = [
           Privacy Policy
         </h1>
         <p class="text-[#6b7280] text-sm mb-10">
-          Last updated: March 6, 2026
+          Last updated: March 9, 2026
         </p>
 
         <SectionList data={sectionsEn} />

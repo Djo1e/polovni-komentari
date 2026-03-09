@@ -70,13 +70,15 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 
   if (msg.type === "GOOGLE_AUTH_REVOKE") {
     chrome.identity.getAuthToken({ interactive: false })
-      .then((result) => {
+      .then(async (result) => {
         if (result.token) {
-          return chrome.identity.removeCachedAuthToken({ token: result.token });
+          fetch(`https://accounts.google.com/o/oauth2/revoke?token=${result.token}`).catch(() => {});
+          await chrome.identity.removeCachedAuthToken({ token: result.token });
         }
+        await chrome.identity.clearAllCachedAuthTokens();
       })
       .then(() => sendResponse({ ok: true }))
-      .catch(() => sendResponse({ ok: true }));
+      .catch((err) => { console.warn("Token revocation failed:", err); sendResponse({ ok: true }); });
     return true;
   }
 });

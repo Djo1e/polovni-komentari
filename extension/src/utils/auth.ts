@@ -11,36 +11,53 @@ export interface UserData {
   displayName: string;
   isCustomName: boolean;
   emailNotifications: boolean;
+  sessionToken: string;
 }
 
-export function getStoredUser(): UserData | null {
-  const stored = localStorage.getItem(USER_DATA_KEY);
-  if (!stored) return null;
+export async function getStoredUser(): Promise<UserData | null> {
   try {
-    return JSON.parse(stored);
+    const result = await chrome.storage.local.get(USER_DATA_KEY);
+    const stored = result[USER_DATA_KEY] as UserData | string | undefined;
+    if (!stored) return null;
+    const data: UserData = typeof stored === "string" ? JSON.parse(stored) : stored;
+    if (!data.sessionToken) return null;
+    return data;
   } catch {
     return null;
   }
 }
 
-function storeUser(data: UserData): void {
-  localStorage.setItem(USER_DATA_KEY, JSON.stringify(data));
+export async function storeUser(data: UserData): Promise<void> {
+  await chrome.storage.local.set({ [USER_DATA_KEY]: data });
 }
 
-function clearStoredUser(): void {
+async function clearStoredUser(): Promise<void> {
+  await chrome.storage.local.remove(USER_DATA_KEY);
+}
+
+export async function migrateFromLocalStorage(): Promise<void> {
+  const stored = localStorage.getItem(USER_DATA_KEY);
+  if (!stored) return;
+  try {
+    const data = JSON.parse(stored);
+    await chrome.storage.local.set({ [USER_DATA_KEY]: data });
+  } catch {
+    // Ignore parse errors
+  }
   localStorage.removeItem(USER_DATA_KEY);
-}
-
-export function getStoredUserId(): Id<"users"> | null {
-  const stored = getStoredUser();
-  return stored?.userId ?? null;
 }
 
 function sendMessage<T>(msg: Record<string, unknown>): Promise<T> {
   return new Promise((resolve, reject) => {
+    if (!chrome.runtime?.sendMessage) {
+      reject(new Error("Extension context invalidated. Please refresh the page."));
+      return;
+    }
     chrome.runtime.sendMessage(msg, (response: T & { ok: boolean; error?: string }) => {
       if (chrome.runtime.lastError) {
         reject(new Error(chrome.runtime.lastError.message));
+      } else if (!response) {
+        reject(new Error("No response from background script"));
       } else if (!response.ok) {
         reject(new Error(response.error ?? "Unknown error"));
       } else {
@@ -68,9 +85,10 @@ export async function signInWithGoogle(anonymousId: string): Promise<UserData> {
     displayName: signInResult.displayName,
     isCustomName: signInResult.isCustomName,
     emailNotifications: signInResult.emailNotifications,
+    sessionToken: signInResult.sessionToken,
   };
 
-  storeUser(userData);
+  await storeUser(userData);
   return userData;
 }
 
@@ -80,5 +98,5 @@ export async function signOut(): Promise<void> {
   } catch {
     // No token cached, that's fine
   }
-  clearStoredUser();
+  await clearStoredUser();
 }

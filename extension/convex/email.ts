@@ -6,6 +6,15 @@ import { internalAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { Resend } from "resend";
 
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function sanitizeUrl(url: string): string {
+  if (url.startsWith("https://www.polovniautomobili.com/")) return url;
+  return "https://www.polovniautomobili.com/";
+}
+
 export const sendReplyNotificationEmail = internalAction({
   args: {
     notificationId: v.id("notifications"),
@@ -26,8 +35,15 @@ export const sendReplyNotificationEmail = internalAction({
 
     const resend = new Resend(apiKey);
 
+    const user = await ctx.runQuery(internal.users.getUserInternal, { userId: args.userId });
+    const unsubToken = user?.unsubscribeToken ?? "";
     const convexUrl = process.env.CONVEX_SITE_URL ?? "";
-    const unsubscribeUrl = `${convexUrl}/unsubscribe?userId=${args.userId}`;
+    const unsubscribeUrl = `${convexUrl}/unsubscribe?userId=${args.userId}&token=${unsubToken}`;
+
+    const safeReplierName = escapeHtml(args.replierName);
+    const safeSnippet = escapeHtml(args.replySnippet);
+    const safeTitle = escapeHtml(args.listingTitle);
+    const safeUrl = sanitizeUrl(args.listingUrl);
 
     await resend.emails.send({
       from: "Polovni Komentari <notifications@polovnikomentari.com>",
@@ -35,13 +51,13 @@ export const sendReplyNotificationEmail = internalAction({
       subject: `${args.replierName} je odgovorio/la na tvoj komentar`,
       html: `
         <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
-          <h3 style="color: #333;">${args.replierName} je odgovorio/la na tvoj komentar</h3>
+          <h3 style="color: #333;">${safeReplierName} je odgovorio/la na tvoj komentar</h3>
           <p style="color: #555; font-size: 15px; line-height: 1.5; background: #f5f5f5; padding: 12px; border-radius: 8px;">
-            &ldquo;${args.replySnippet}&rdquo;
+            ${safeSnippet}
           </p>
-          <p style="color: #888; font-size: 13px;">Na oglasu: ${args.listingTitle}</p>
-          <a href="${args.listingUrl}" style="display: inline-block; background: #f97316; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px; margin-top: 8px;">
-            Pogledaj na Polovni Automobili &rarr;
+          <p style="color: #888; font-size: 13px;">Na oglasu: ${safeTitle}</p>
+          <a href="${safeUrl}" style="display: inline-block; background: #f97316; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 14px; margin-top: 8px;">
+            Pogledaj &rarr;
           </a>
           <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
           <p style="color: #aaa; font-size: 11px;">

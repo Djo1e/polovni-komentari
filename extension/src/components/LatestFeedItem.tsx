@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, ExternalLink, User } from "lucide-react";
 import { extractListingId } from "../utils/listingId";
 import { trackEvent } from "../utils/tracking";
+import { formatTimeAgo } from "../utils/formatTimeAgo";
 
 interface LatestReply {
   _id: string;
@@ -34,8 +35,15 @@ interface Props {
 
 export function LatestFeedItem({ comment }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
   const timeAgo = formatTimeAgo(comment.createdAt);
   const isDeleted = comment.listing?.isDeleted ?? false;
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) setIsTruncated(el.scrollWidth > el.clientWidth);
+  }, [comment.text]);
 
   if (!comment.listing) {
     return (
@@ -62,14 +70,6 @@ export function LatestFeedItem({ comment }: Props) {
       </div>
     );
   }
-
-  const textRef = useRef<HTMLParagraphElement>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
-
-  useEffect(() => {
-    const el = textRef.current;
-    if (el) setIsTruncated(el.scrollWidth > el.clientWidth);
-  }, [comment.text]);
 
   return (
     <div className="py-1.5 border-b border-gray-100 last:border-0">
@@ -140,17 +140,4 @@ export function LatestFeedItem({ comment }: Props) {
       </div>
     </div>
   );
-}
-
-function formatTimeAgo(timestamp: number): string {
-  const diff = Date.now() - timestamp;
-  const minutes = Math.floor(diff / 60_000);
-  if (minutes < 1) return "upravo";
-  if (minutes < 60) return `pre ${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `pre ${hours}h`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `pre ${days}d`;
-  const weeks = Math.floor(days / 7);
-  return `pre ${weeks}n`;
 }
