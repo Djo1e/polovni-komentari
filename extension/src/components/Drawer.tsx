@@ -27,6 +27,24 @@ interface Props {
   vin: string | null;
   boughtNewInSerbia: boolean;
   deletedListingData: { title: string; price: string; imageUrl: string; url: string; isDeleted: boolean } | null;
+  auth: {
+    user: import("../utils/auth").UserData | null;
+    signingIn: boolean;
+    signIn: () => Promise<void>;
+    signOut: () => Promise<void>;
+    updateDisplayName: (name: string) => Promise<void>;
+    updateEmailNotifications: (enabled: boolean) => Promise<void>;
+  };
+  unreadCount: number;
+  notifications: Array<{
+    _id: import("../../convex/_generated/dataModel").Id<"notifications">;
+    triggerAuthorName: string;
+    listingId: string;
+    read: boolean;
+    createdAt: number;
+    type: string;
+  }>;
+  onMarkAllRead: () => Promise<void>;
 }
 
 const DRAWER_STATE_KEY = "paCommentsDrawerOpen";
@@ -51,6 +69,10 @@ export function Drawer({
   vin,
   boughtNewInSerbia,
   deletedListingData,
+  auth,
+  unreadCount,
+  notifications,
+  onMarkAllRead,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [animating, setAnimating] = useState(false);
