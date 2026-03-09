@@ -1,0 +1,124 @@
+---
+import Base from "../layouts/Base.astro";
+import SectionList from "../components/SectionList.astro";
+
+const sections = [
+  {
+    title: "O servisu",
+    content:
+      "Polovni Komentari su nezavisan projekat koji dodaje komentare na stranice oglasa na polovniautomobili.com. Nisu povezani sa, podržani od strane, niti odobreni od strane polovniautomobili.com ili Polovni automobili doo.",
+  },
+  {
+    title: "Korisnički sadržaj",
+    items: [
+      "Korisnici su odgovorni za sadržaj koji postavljaju.",
+      "Zabranjeni su: govor mržnje, spam, nezakonit sadržaj, lični napadi i deljenje ličnih podataka drugih lica.",
+      "Zadržavamo pravo da uklonimo bilo koji komentar bez prethodnog obaveštenja.",
+    ],
+  },
+  {
+    title: "Odricanje od odgovornosti",
+    items: [
+      "Servis se pruža \"kakav jeste\" bez ikakvih garancija.",
+      "Ne garantujemo dostupnost, tačnost ili pouzdanost servisa.",
+      "Servis može biti izmenjen ili ukinut u bilo kom trenutku bez prethodnog obaveštenja.",
+    ],
+  },
+  {
+    title: "Ograničenje odgovornosti",
+    content:
+      "Ni u kom slučaju nećemo biti odgovorni za bilo kakvu direktnu, indirektnu, slučajnu ili posledičnu štetu nastalu korišćenjem ovog servisa.",
+  },
+  {
+    title: "Privatnost",
+    content:
+      "Korišćenjem servisa prihvatate našu Politiku privatnosti. Za više informacija posetite stranicu /privacy.",
+  },
+  {
+    title: "Merodavno pravo",
+    content: "Na ove Uslove korišćenja primenjuje se pravo Republike Srbije.",
+  },
+];
+
+const sectionsEn = [
+  {
+    title: "About the service",
+    content:
+      "Polovni Komentari is an independent project that adds comments to listing pages on polovniautomobili.com. It is not affiliated with, endorsed by, or approved by polovniautomobili.com or Polovni automobili doo.",
+  },
+  {
+    title: "User content",
+    items: [
+      "Users are responsible for the content they post.",
+      "Prohibited: hate speech, spam, illegal content, personal attacks, and sharing personal information of others.",
+      "We reserve the right to remove any comment without prior notice.",
+    ],
+  },
+  {
+    title: "Disclaimer of warranties",
+    items: [
+      "The service is provided \"as is\" without any warranties.",
+      "We do not guarantee availability, accuracy, or reliability of the service.",
+      "The service may be modified or discontinued at any time without prior notice.",
+    ],
+  },
+  {
+    title: "Limitation of liability",
+    content:
+      "In no event shall we be liable for any direct, indirect, incidental, or consequential damages arising from the use of this service.",
+  },
+  {
+    title: "Privacy",
+    content:
+      "By using the service you accept our Privacy Policy. For more information visit /privacy.",
+  },
+  {
+    title: "Governing law",
+    content:
+      "These Terms of Service are governed by the laws of the Republic of Serbia.",
+  },
+];
+---
+<Base
+  title="Uslovi korišćenja — Polovni Komentari"
+  description="Uslovi korišćenja Chrome ekstenzije Polovni Komentari."
+  path="/terms"
+>
+  <div class="min-h-screen bg-white">
+    <div class="h-1 bg-[#E5A100]"></div>
+
+    <div class="max-w-2xl mx-auto px-6 py-12">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-[#6b7280] hover:text-[#1a1a1a] transition-colors text-sm mb-8"
+      >
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Nazad
+      </a>
+
+      <h1 class="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
+        Uslovi korišćenja
+      </h1>
+      <p class="text-[#6b7280] text-sm mb-10">
+        Poslednje ažuriranje: 27. februar 2026.
+      </p>
+
+      <SectionList data={sections} />
+
+      <div class="mt-16 pt-8 border-t border-[#e5e5e5]">
+        <h1 class="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
+          Terms of Service
+        </h1>
+        <p class="text-[#6b7280] text-sm mb-10">
+          Last updated: February 27, 2026
+        </p>
+
+        <SectionList data={sectionsEn} />
+      </div>
+
+      <div class="mt-12 pt-6 border-t border-[#e5e5e5] text-[#6b7280] text-xs">
+        &copy; 2026 Polovni Komentari
+      </div>
+    </div>
+  </div>
+</Base>
