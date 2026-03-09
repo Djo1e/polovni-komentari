@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Polovni Komentari",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Nezavisni komentari za oglase na polovniautomobili.com",
   "icons": {
     "16": "public/icons/icon16.png",
@@ -10,7 +10,7 @@
   },
   "permissions": ["storage", "identity"],
   "oauth2": {
-    "client_id": "PLACEHOLDER.apps.googleusercontent.com",
+    "client_id": "141307027583-qrnna3sc4gvrnd3eo8v3fp9srrnehtnb.apps.googleusercontent.com",
     "scopes": ["openid", "email", "profile"]
   },
   "host_permissions": [
