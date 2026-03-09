@@ -1,14 +1,18 @@
 {
   "manifest_version": 3,
   "name": "Polovni Komentari",
-  "version": "1.4.0",
+  "version": "1.5.1",
   "description": "Nezavisni komentari za oglase na polovniautomobili.com",
   "icons": {
     "16": "public/icons/icon16.png",
     "48": "public/icons/icon48.png",
     "128": "public/icons/icon128.png"
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "identity"],
+  "oauth2": {
+    "client_id": "PLACEHOLDER.apps.googleusercontent.com",
+    "scopes": ["openid", "email", "profile"]
+  },
   "host_permissions": [
     "https://www.abs.gov.rs/*",
     "https://www.google-analytics.com/*"
