@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { query, mutation, internalMutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 import { MutationCtx } from "./_generated/server";
+import { internal } from "./_generated/api";
 
 // Shared helper function so postComment can call it directly (not via scheduler)
 export async function createNotificationsForReplyHelper(
@@ -47,7 +48,7 @@ export async function createNotificationsForReplyHelper(
 
   // Create notifications
   for (const userId of userIdsToNotify) {
-    await ctx.db.insert("notifications", {
+    const notificationId = await ctx.db.insert("notifications", {
       userId,
       type: "reply",
       commentId,
@@ -57,6 +58,30 @@ export async function createNotificationsForReplyHelper(
       emailSent: false,
       createdAt: Date.now(),
     });
+
+    // Schedule email if user has notifications enabled
+    const user = await ctx.db.get(userId);
+    if (user && user.emailNotifications) {
+      // Get the reply text for the email snippet
+      const replyComment = await ctx.db.get(commentId);
+      const replySnippet = replyComment ? replyComment.text.slice(0, 200) : "";
+
+      const listing = await ctx.db
+        .query("listings")
+        .withIndex("by_listingId", (q) => q.eq("listingId", listingId))
+        .first();
+
+      await ctx.scheduler.runAfter(0, internal.email.sendReplyNotificationEmail, {
+        notificationId,
+        toEmail: user.email,
+        recipientName: user.displayName,
+        replierName: authorName,
+        replySnippet,
+        listingTitle: listing?.title ?? "Oglas",
+        listingUrl: listing?.url ?? `https://www.polovniautomobili.com/auto-oglasi/${listingId}`,
+        userId,
+      });
+    }
   }
 }
 
