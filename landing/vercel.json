@@ -8,9 +8,5 @@
       "destination": "https://polovnikomentari.com/:path",
       "permanent": true
     }
-  ],
-  "rewrites": [
-    { "source": "/privacy", "destination": "/index.html" },
-    { "source": "/terms", "destination": "/index.html" }
   ]
 }

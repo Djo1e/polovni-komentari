@@ -1,4 +1,6 @@
-import { ArrowLeft } from "lucide-react";
+---
+import Base from "../layouts/Base.astro";
+import SectionList from "../components/SectionList.astro";
 
 const sections = [
   {
@@ -59,7 +61,7 @@ const sections = [
     content:
       "Komentari i glasovi se čuvaju neograničeno osim ako se ne zatraži brisanje. Osnovni podaci o oglasu (naslov, cena, URL slike) se čuvaju kako bi se prikazali u fidu najnovijih komentara. Ovi podaci su javno dostupni na polovniautomobili.com.",
   },
-] as const;
+];
 
 const sectionsEn = [
   {
@@ -119,78 +121,48 @@ const sectionsEn = [
     content:
       "Comments and votes are retained indefinitely unless deletion is requested. Basic listing data (title, price, image URL) is stored to display in the latest comments feed. This data is publicly available on polovniautomobili.com.",
   },
-] as const;
+];
+---
+<Base
+  title="Politika privatnosti — Polovni Komentari"
+  description="Politika privatnosti Chrome ekstenzije Polovni Komentari. Saznajte koje podatke prikupljamo i kako ih koristimo."
+  path="/privacy"
+>
+  <div class="min-h-screen bg-white">
+    <div class="h-1 bg-[#E5A100]"></div>
 
-function SectionList({ data }: { data: typeof sections | typeof sectionsEn }) {
-  return (
-    <div className="space-y-8">
-      {data.map((section) => (
-        <div key={section.title}>
-          <h2 className="font-[Outfit] font-700 text-lg text-[#1a1a1a] mb-2">
-            {section.title}
-          </h2>
-          {"content" in section && (
-            <p className="text-[#6b7280] text-sm leading-relaxed">
-              {section.content}
-            </p>
-          )}
-          {"items" in section && (
-            <ul className="space-y-1.5">
-              {section.items.map((item) => (
-                <li
-                  key={item}
-                  className="text-[#6b7280] text-sm leading-relaxed flex gap-2"
-                >
-                  <span className="text-[#E5A100] shrink-0">•</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
+    <div class="max-w-2xl mx-auto px-6 py-12">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 text-[#6b7280] hover:text-[#1a1a1a] transition-colors text-sm mb-8"
+      >
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Nazad
+      </a>
 
-export default function PrivacyPolicy() {
-  return (
-    <div className="min-h-screen bg-white">
-      <div className="h-1 bg-[#E5A100]" />
+      <h1 class="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
+        Politika privatnosti
+      </h1>
+      <p class="text-[#6b7280] text-sm mb-10">
+        Poslednje ažuriranje: 6. mart 2026.
+      </p>
 
-      <div className="max-w-2xl mx-auto px-6 py-12">
-        <a
-          href="/"
-          className="inline-flex items-center gap-2 text-[#6b7280] hover:text-[#1a1a1a] transition-colors text-sm mb-8"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Nazad
-        </a>
+      <SectionList data={sections} />
 
-        <h1 className="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
-          Politika privatnosti
+      <div class="mt-16 pt-8 border-t border-[#e5e5e5]">
+        <h1 class="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
+          Privacy Policy
         </h1>
-        <p className="text-[#6b7280] text-sm mb-10">
-          Poslednje ažuriranje: 6. mart 2026.
+        <p class="text-[#6b7280] text-sm mb-10">
+          Last updated: March 6, 2026
         </p>
 
-        <SectionList data={sections} />
+        <SectionList data={sectionsEn} />
+      </div>
 
-        <div className="mt-16 pt-8 border-t border-[#e5e5e5]">
-          <h1 className="font-[Outfit] font-900 text-3xl md:text-4xl text-[#1a1a1a] mb-2">
-            Privacy Policy
-          </h1>
-          <p className="text-[#6b7280] text-sm mb-10">
-            Last updated: March 6, 2026
-          </p>
-
-          <SectionList data={sectionsEn} />
-        </div>
-
-        <div className="mt-12 pt-6 border-t border-[#e5e5e5] text-[#6b7280] text-xs">
-          &copy; 2026 Polovni Komentari
-        </div>
+      <div class="mt-12 pt-6 border-t border-[#e5e5e5] text-[#6b7280] text-xs">
+        &copy; 2026 Polovni Komentari
       </div>
     </div>
-  );
-}
+  </div>
+</Base>
