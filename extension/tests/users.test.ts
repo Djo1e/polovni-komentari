@@ -81,3 +81,56 @@ test("migrateAnonymousComments does not touch other users' comments", async () =
   const comments = await t.query(api.comments.getComments, { listingId: "L1" });
   expect(comments[0].userId).toBeUndefined();
 });
+
+test("updateDisplayName changes user display name", async () => {
+  const t = convexTest(schema);
+  const userId = await t.mutation(internal.users.createOrUpdateUser, {
+    googleId: "google-abc",
+    email: "test@gmail.com",
+    firstName: "Test",
+    anonymousId: "anon-123",
+  });
+  await t.mutation(api.users.updateDisplayName, { userId, displayName: "CoolGuy" });
+  const user = await t.query(api.users.getUser, { userId });
+  expect(user!.displayName).toBe("CoolGuy");
+  expect(user!.isCustomName).toBe(true);
+});
+
+test("updateDisplayName rejects empty name", async () => {
+  const t = convexTest(schema);
+  const userId = await t.mutation(internal.users.createOrUpdateUser, {
+    googleId: "google-abc",
+    email: "test@gmail.com",
+    firstName: "Test",
+    anonymousId: "anon-123",
+  });
+  await expect(
+    t.mutation(api.users.updateDisplayName, { userId, displayName: "   " })
+  ).rejects.toThrow();
+});
+
+test("updateDisplayName rejects name over 30 chars", async () => {
+  const t = convexTest(schema);
+  const userId = await t.mutation(internal.users.createOrUpdateUser, {
+    googleId: "google-abc",
+    email: "test@gmail.com",
+    firstName: "Test",
+    anonymousId: "anon-123",
+  });
+  await expect(
+    t.mutation(api.users.updateDisplayName, { userId, displayName: "a".repeat(31) })
+  ).rejects.toThrow();
+});
+
+test("updateEmailNotifications toggles email preference", async () => {
+  const t = convexTest(schema);
+  const userId = await t.mutation(internal.users.createOrUpdateUser, {
+    googleId: "google-abc",
+    email: "test@gmail.com",
+    firstName: "Test",
+    anonymousId: "anon-123",
+  });
+  await t.mutation(api.users.updateEmailNotifications, { userId, enabled: false });
+  const user = await t.query(api.users.getUser, { userId });
+  expect(user!.emailNotifications).toBe(false);
+});
